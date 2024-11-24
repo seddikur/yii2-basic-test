@@ -1,20 +1,21 @@
 <?php
 
-use yii\helpers\Html;
+use \app\models\UserEntity;
+use yii\bootstrap4\Html;
 
-/** @var yii\web\View $this */
-/** @var app\models\Users $model */
+/* @var $this yii\web\View */
+/* @var $model \app\models\UserEntity */
 
-$this->title = 'Create User';
+$this->title = 'Новый пользователь';
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="user-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+?>
+<div class="user-update">
+
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
 
-</div>

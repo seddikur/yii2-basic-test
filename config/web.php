@@ -5,12 +5,17 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name'=>'Название',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language'=>'ru',
+    'sourceLanguage'=>'ru',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    // перевести сайт в режим обслуживания
+//    'catchAll' => ['site/offline'],
     'modules' => [
         'admin' => [
             'class' => 'app\modules\admin\Admin',
@@ -18,6 +23,15 @@ $config = [
         'gridview' => ['class' => 'kartik\grid\Module']
     ],
     'components' => [
+        'authManager' => [
+//            'class' => 'yii\rbac\PhpManager',
+            'class' => 'app\components\AuthManager',
+            'defaultRoles' => ['admin', 'user', 'moder'],
+            //зададим куда будут сохраняться наши файлы конфигураций RBAC/ это и по умолчанию
+            'itemFile' => '@app/rbac/items.php',
+            'assignmentFile' => '@app/rbac/assignments.php',
+            'ruleFile' => '@app/rbac/rules.php'
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'kpyt4SuVlYmu5P4SOwNRTlQOvdtPgfGV',
@@ -26,7 +40,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\Users',
+            'identityClass' => \app\models\forms\UserForm::class,
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [

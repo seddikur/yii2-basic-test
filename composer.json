@@ -25,7 +25,13 @@
         "npm-asset/bootstrap-icons": "^1.11",
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-datecontrol": "@dev",
-        "kartik-v/yii2-widget-datepicker": "@dev"
+        "kartik-v/yii2-widget-datepicker": "@dev",
+        "yiisoft/yii2-bootstrap4": "^2.0",
+        "kartik-v/yii2-widget-select2": "@dev",
+        "kartik-v/yii2-slider": "dev-master",
+        "kartik-v/yii2-helpers": "dev-master",
+        "kartik-v/yii2-widget-fileinput": "@dev",
+        "phpnt/bootstrap-notify": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -29,7 +29,7 @@ class m241022_070932_seed_user extends Migration
                         'first_name' => $faker->firstName,
                         'patronymic' => $faker->name,
                         'verification_token' => Yii::$app->security->generateRandomString() . '_' . time(),
-                        'status' => Users::STATUS_ACTIVE,
+                        'status' => \app\models\Constants::STATUS_ACTIVE,
                         'created_at' => $dateTime,
                         'updated_at' => $dateTime,
 //                        'role' => Users::Role_Admin

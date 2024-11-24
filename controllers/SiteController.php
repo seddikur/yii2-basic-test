@@ -2,9 +2,10 @@
 
 namespace app\controllers;
 
-use app\models\TaskSearch;
+use app\models\extend\UserExtend;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -21,14 +22,28 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+//                'only' => ['logout'],
+//                'only' => ['index', 'error', 'about', 'contact', 'login','logout',],
                 'rules' => [
+                    [
+                        'actions' => ['index', 'error', 'about', 'contact', ],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['login'],
+                        'ips' => [ '172.19.0.1'],//Введите разрешенный IP-адрес здесь
+                        'allow' => true, //Указывает, является ли это правило разрешающим или запрещающим.
+
+                    ],
                     [
                         'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['@'],// Правило для аутентифицированных пользователей.
                     ],
                 ],
+//                'denyCallback' => function ($rule, $action) {
+//                    throw new \Exception('Вам запрещен доступ к этой странице');
+//                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -87,12 +102,14 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        // Уже авторизированных отправляем на домашнюю страницу
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            UserExtend::afterLogin(Yii::$app->user->id);
             return $this->goBack();
         }
 
@@ -140,5 +157,15 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    /**
+     *  режим обслуживания.
+     *
+     * @return string
+     */
+    public function actionOffline()
+    {
+        return $this->render('offline');
     }
 }

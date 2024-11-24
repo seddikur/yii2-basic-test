@@ -14,6 +14,15 @@ $config = [
         '@tests' => '@app/tests',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            //зададим куда будут сохраняться наши файлы конфигураций RBAC
+            'itemFile' => 'rbac/items.php',
+            'assignmentFile' => 'rbac/assignments.php',
+            'ruleFile' => 'rbac/rules.php',
+            'defaultRoles' => ['user','moder','admin'],
+
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -49,7 +58,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 

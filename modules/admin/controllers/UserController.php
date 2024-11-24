@@ -2,11 +2,15 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\search\UserSearch;
 use app\models\Users;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use Yii;
+use app\models\forms\UserForm;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -38,22 +42,12 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Users::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $allUserSearch = new UserSearch();
+        $dataProviderUserSearch = $allUserSearch->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'allUserSearch' => $allUserSearch,
+            'dataProvider' => $dataProviderUserSearch,
         ]);
     }
 
@@ -77,18 +71,30 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Users();
+        $modelUserForm = new UserForm();
+        $modelUserForm->scenario = 'create-user';
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+//        if ($this->request->isPost) {
+//            if ($modelUserForm->load($this->request->post()) && $modelUserForm->save()) {
+//                return $this->redirect(['index']);
+//            }
+//        }
+//        else {
+//            $modelUserForm->loadDefaultValues();
+//        }
+
+        if ($modelUserForm->load(Yii::$app->request->post()) && $modelUserForm->save()) {
+//        if ($modelUserForm->load(Yii::$app->request->post())) {
+//            if($modelUserForm->save()){
+                return $this->redirect(['index']);
+//            }else{
+//                VarDumper::dump($modelUserForm->errors);
+//            }
+
         }
 
         return $this->render('create', [
-            'model' => $model,
+            'model' => $modelUserForm,
         ]);
     }
 
@@ -101,14 +107,19 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $modelUserForm = UserForm::findOne($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+
+//        if ($this->request->isPost && $modelUserForm->load($this->request->post()) && $modelUserForm->save()) {//
+        if ($modelUserForm->load(Yii::$app->request->post())) {
+            if ($modelUserForm->save()) {
+                return $this->redirect(['index']);
+            } else {
+                VarDumper::dump($modelUserForm->errors);
+            }
         }
-
         return $this->render('update', [
-            'model' => $model,
+            'model' => $modelUserForm,
         ]);
     }
 

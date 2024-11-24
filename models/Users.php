@@ -89,6 +89,35 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
+     * Проверка на админа
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return !empty(\Yii::$app->authManager->getAssignment('admin', \Yii::$app->user->id));
+    }
+
+    /**
+     * Проверка на user
+     * @return bool
+     */
+    public function isUser()
+    {
+        return !empty(\Yii::$app->authManager->getAssignment('user', \Yii::$app->user->id));
+    }
+
+    /**
+     * Gets query for [[OrganizationUsers]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrganizationUsers()
+    {
+        return $this->hasMany(OrganizationUser::class, ['user_id' => 'id']);
+    }
+
+
+    /**
      * Gets query for [[Projects]].
      *
      * @return \yii\db\ActiveQuery
@@ -97,4 +126,5 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Projects::class, ['user_id' => 'id']);
     }
+
 }

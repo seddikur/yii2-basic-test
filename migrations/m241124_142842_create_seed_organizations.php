@@ -13,9 +13,9 @@ class m241124_142842_create_seed_organizations extends Migration
     public function safeUp()
     {
 
-        $faker = \Faker\Factory::create();
+        $faker = \Faker\Factory::create('ru_RU');
         $dateTime = (new DateTime())->getTimestamp();
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $this->insert(
                 'organizations',
                 [

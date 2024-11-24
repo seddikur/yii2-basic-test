@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "organizations".
@@ -49,6 +50,23 @@ class Organizations extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+    /**
+     * Автозаполнение полей создание и редактирование
+     * профиля
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+//        return [[
+//            'class' => TimestampBehavior::className(),
+//            'createdAtAttribute' => 'created_at',
+//            'updatedAtAttribute' => 'updated_at',
+//            'value' => time(),
+//        ]];
     }
 
     /**

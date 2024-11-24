@@ -5,10 +5,10 @@ use yii\bootstrap5\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\extend\UserExtend;
 
-
 /** @var yii\web\View $this */
 /** @var UserExtend $model */
 /** @var yii\widgets\ActiveForm $form */
+
 ?>
 
 <div class="user-entity-form">
@@ -31,11 +31,14 @@ use app\models\extend\UserExtend;
                 <div class="card-body">
                     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                    <?php if(Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN):?>
                     <?= $form->field($model, 'status')->dropDownList($model->statusList) ?>
                     <?= $form->field($model, 'role')->dropDownList(ArrayHelper::map(Yii::$app->authManager->getRoles(), 'name', 'description')) ?>
+                    <?php endif;?>
                 </div>
             </div>
         </div>
+        <?php if(Yii::$app->user->identity->id == $model->id || Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN):?>
         <div class="col-4">
             <div class="card">
                 <div class="card-body">
@@ -47,6 +50,7 @@ use app\models\extend\UserExtend;
                 </div>
             </div>
         </div>
+        <?php endif;?>
         <div class="form-group">
             <?= \app\widgets\grid\Submit::widget() ?>
         </div>

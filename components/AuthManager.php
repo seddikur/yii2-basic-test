@@ -1,13 +1,26 @@
 <?php
+
 namespace app\components;
 
-use app\models\User;
+use app\models\Users;
 use yii\rbac\Assignment;
 use yii\rbac\PhpManager;
 use Yii;
 
+/**
+ * Клас для настройки ролей
+ * из файла
+ *
+ * //Yii::$app->authManager->assign($userRole, $userId);
+ * Yii::$app->authManager->getRole('admin'),
+ */
 class AuthManager extends PhpManager
 {
+
+    /**
+     * @param $userId
+     * @return array|Assignment[]
+     */
     public function getAssignments($userId)
     {
         if ($userId && $user = $this->getUser($userId)) {
@@ -19,6 +32,11 @@ class AuthManager extends PhpManager
         return [];
     }
 
+    /**
+     * @param $roleName
+     * @param $userId
+     * @return Assignment|null
+     */
     public function getAssignment($roleName, $userId)
     {
         if ($userId && $user = $this->getUser($userId)) {
@@ -32,9 +50,13 @@ class AuthManager extends PhpManager
         return null;
     }
 
+    /**
+     * @param $roleName
+     * @return array
+     */
     public function getUserIdsByRole($roleName)
     {
-        return User::find()->where(['role' => $roleName])->select('id')->column();
+        return Users::find()->where(['role' => $roleName])->select('id')->column();
     }
 
     public function assign($role, $userId)
@@ -73,7 +95,7 @@ class AuthManager extends PhpManager
 
     /**
      * @param integer $userId
-     * @return null|\yii\web\IdentityInterface|User
+     * @return null|\yii\web\IdentityInterface|Users
      */
     private function getUser($userId)
     {
@@ -81,15 +103,15 @@ class AuthManager extends PhpManager
         if ($webUser && !$webUser->getIsGuest() && $webUser->getId() == $userId) {
             return $webUser->getIdentity();
         } else {
-            return User::findOne($userId);
+            return Users::findOne($userId);
         }
     }
 
     /**
-     * @param User $user
+     * @param Users $user
      * @param string $roleName
      */
-    private function setRole(User $user, $roleName)
+    private function setRole(Users $user, $roleName)
     {
         $user->role = $roleName;
         $user->updateAttributes(['role' => $roleName]);

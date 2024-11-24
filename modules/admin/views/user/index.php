@@ -19,10 +19,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?php echo Html::a('Добавить', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php
+    //    d(Yii::$app->user);
+    //$userId = Yii::$app->user->id; //id текущего пользователя
+    //$userRole = Yii::$app->authManager->getRole('admin');
+    //Yii::$app->authManager->assign($userRole, $userId);
+//    $user_to_login = Users::findOne(Yii::$app->user->id);
+//        \yii\helpers\VarDumper::dump( $user_to_login->isAdmin(), 10, true);
+     if ( \Yii::$app->authManager->getAssignment('admin', Yii::$app->user->id)): ?>
 
+        <p>
+            <?php echo Html::a('Новый', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+    <?php endif; ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -34,12 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'last_name',
             'first_name',
             'patronymic',
-//            'auth_key',
-//            'password_hash',
-//            'password_reset_token',
             'email:email',
             [
-                'label' => 'status',
                 'format' => 'raw',
                 'attribute' => 'status',
                 'value' => function ($data) {
@@ -62,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
 //                'template' => '{view}&nbsp;&nbsp;{permit}&nbsp;&nbsp;{delete}',
-                'template' => '{view} {update} {delete}',
+                'template' => '{login} {view} {update}  {delete}',
 //                'urlCreator' => function ($action, $model) {
 //                    if ($action === 'view') {
 //                        return '/user/login_as_user?id=' . $model->id;
@@ -75,8 +80,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => 'Change user role'
                         ]);
                     },
+                    'login' => function ($url,$model, $key) {
+                        $url = 'login_as_user?id=' . $model->id;
+                        return Html::a('<i class="bi bi-box-arrow-in-right "></i>',$url);
+                    },
                 ],
-//                'visibleButtons' => [
+                'visibleButtons' => [
 //                    'view'   => function (Users $user) {
 //                        // Нельзя войти под самим собой и под суперадмином
 //                        return (int)$user->id !== 1 && (int)$user->id !== (int)Yii::$app->getUser()->getId();
@@ -85,16 +94,23 @@ $this->params['breadcrumbs'][] = $this->title;
 //                        // @todo жесткая привязка к id, добавить константу SUPERADMIN
 //                        return Yii::$app->getUser()->getId() === 1;
 //                    },
-//                    'delete' => function (Users $model) {
-//                        // Нельзя удалить суперадмина и себя
-//                        // @todo жесткая привязка к id
-//                        if ((int)$model->id === 1 || Yii::$app->getUser()->getId() === $model->id) {
-//                            return false;
-//                        }
-//                        // Удалять может только суперадмин
-//                        return Yii::$app->getUser()->getId() === 1;
-//                    },
-//                ]
+                    'login' => function (Users $model) {
+                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+                    },
+                    'update' => function (Users $model) {
+//                    return Yii::$app->getUser()->getId() === 1;
+                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+                    },
+
+                    'delete' => function (Users $model) {
+                        // Нельзя удалить admin и себя
+                        if (Yii::$app->user->identity->id === $model->id) {
+                            return false;
+                        }
+                        // Удалять может только админ
+                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+                    },
+                ]
             ],
         ],
     ]); ?>

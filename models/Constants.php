@@ -15,15 +15,16 @@ class Constants
     const STATUS_ACTIVE = 1;    // активен
     const STATUS_WAIT = 2;      // ожидает подтверждения
 
+    // Статусы ролей
+    const ROLE_ADMIN = 'admin';   // заблокирован
+    const ROLE_MODER = 'moder';    // активен
+    const ROLE_USER = 'user';      // ожидает подтверждения
+
+
     // Доступы пользователя
     const ACCESS_ALL = 1;       // всем пользователям
     const ACCESS_GUEST = 2;     // гостям
     const ACCESS_USER = 3;      // авторизованным пользователям
-
-    // Статусы документов
-    const STATUS_DOC_ACTIVE = 1;    // активен
-    const STATUS_DOC_WAIT = 2;      // ожидает подтверждения
-    const STATUS_DOC_BLOCKED = 6;   // заблокирован
 
     // Статусы I18n
     const STATUS_I18N_ALL = 1;      // переводить все
@@ -56,10 +57,6 @@ class Constants
     const TYPE_ROLE    = 1;
     const TYPE_PERMISSION = 2;
 
-    // Типы представлений шаблонов
-    const TYPE_ITEM = 0;        // элемент
-    const TYPE_ITEM_LIST = 1;   // элемент списка
-    const TYPE_ITEM_BASKET = 2; // элемент корзины
 
     // типы поле
     const FIELD_TYPE_INT        = 1; // Целое число +

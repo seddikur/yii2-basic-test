@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\extend\UserExtend;
 use app\models\search\UserSearch;
 use app\models\Users;
 use yii\data\ActiveDataProvider;
@@ -84,6 +85,7 @@ class UserController extends Controller
 //        }
 
         if ($modelUserForm->load(Yii::$app->request->post()) && $modelUserForm->save()) {
+            Yii::$app->getSession()->setFlash('success', 'Пользователь успешно добавлен');
 //        if ($modelUserForm->load(Yii::$app->request->post())) {
 //            if($modelUserForm->save()){
                 return $this->redirect(['index']);
@@ -138,6 +140,24 @@ class UserController extends Controller
     }
 
     /**
+     * Залогинеться под др пользователем
+     * @param $id
+     * @return false|void
+     */
+    public function actionLogin_as_user($id)
+    {
+        $user_to_login = UserExtend::findOne($id);
+        if (!$user_to_login->isAdmin()){
+            $this->redirect('index');
+        }
+        if (Yii::$app->user->login($user_to_login, true ? 3600 * 24 * 30 : 0)) {
+            $this->redirect('index');
+        } else {
+            echo "Насяльника, я не смогла авторизоватися";
+        }
+    }
+
+    /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id
@@ -152,4 +172,6 @@ class UserController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
 }

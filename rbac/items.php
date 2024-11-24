@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Yii::$app->authManager->getRole('admin'),
+ */
 return [
     'permAdminPanel' => [
         'type' => 2,

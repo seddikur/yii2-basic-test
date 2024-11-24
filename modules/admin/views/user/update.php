@@ -4,12 +4,12 @@ use yii\helpers\Html;
 use yii\helpers\VarDumper;
 
 /** @var yii\web\View $this */
-/** @var \app\models\UserForm $model */
-//VarDumper::dump($model->id,10,true); die();
-//$this->title = 'Update User Entity: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'User Entities', 'url' => ['index']];
+/* @var $model \app\models\forms\UserForm */
+
+$this->title = $model->first_name;
+$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
 //$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Правка';
 ?>
 <div class="user-entity-update">
 

@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+require __DIR__ . '/functions.php';
 
 $config = [
     'id' => 'basic',
@@ -18,7 +19,10 @@ $config = [
 //    'catchAll' => ['site/offline'],
     'modules' => [
         'admin' => [
-            'class' => 'app\modules\admin\Admin',
+            'class' => \app\modules\admin\Admin::class
+        ],
+        'user' => [
+            'class' => \app\modules\user\User::class
         ],
         'gridview' => ['class' => 'kartik\grid\Module']
     ],

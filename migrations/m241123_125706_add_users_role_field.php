@@ -14,7 +14,7 @@ class m241123_125706_add_users_role_field extends Migration
     public function safeUp()
     {
         $this->addColumn(Users::tableName(), 'role', $this->string(64)->comment('Роль пользователя'));
-        $this->update(Users::tableName(), ['role' => 'users']);
+        $this->update(Users::tableName(), ['role' => 'admin']);
     }
 
     /**

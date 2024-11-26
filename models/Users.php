@@ -9,20 +9,21 @@ use app\models\forms\UserForm;
  * This is the model class for table "users".
  *
  * @property int $id
- * @property string $username Логин
+ * @property string $username                              Логин
  * @property string $auth_key
  * @property string $password_hash
  * @property string|null $password_reset_token
- * @property string $email E-mail
- * @property string|null $last_name Фамилия
- * @property string|null $first_name Имя
- * @property string|null $patronymic Отчество
+ * @property string $email                                E-mail
+ * @property string|null $last_name                       Фамилия
+ * @property string|null $first_name                      Имя
+ * @property string|null $patronymic                      Отчество
+ * @property string $avatar                               Аватарка
  * @property string|null $verification_token
- * @property int $status Статус
- * @property int $created_at Создан
- * @property int $updated_at Изменен
- * @property string|null $role Роль пользователя
- * @property string|null $ip Ip
+ * @property int $status                                 Статус
+ * @property int $created_at                             Дата создания
+ * @property int $updated_at                             Дата последнего обновления
+ * @property string|null $role                           Роль пользователя
+ * @property string|null $ip                             Ip
  *
  * @property Projects[] $projects
  */
@@ -88,6 +89,9 @@ class Users extends \yii\db\ActiveRecord
         ];
     }
 
+    /*****************************************************************************************************************
+     *                                                                                                  GET PROPERTIES
+     *****************************************************************************************************************/
     /**
      * Проверка на админа
      * @return bool
@@ -105,7 +109,18 @@ class Users extends \yii\db\ActiveRecord
     {
         return !empty(\Yii::$app->authManager->getAssignment('user', \Yii::$app->user->id));
     }
+    /**
+     * Полное имя сотрудника
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->last_name  . ' ' . $this->first_name  . (!empty($this->patronymic ) ? ' ' . $this->patronymic  : '');
+    }
 
+    /*****************************************************************************************************************
+     *                                                                                                        СВЯЗИ
+     *****************************************************************************************************************/
     /**
      * Gets query for [[OrganizationUsers]].
      *

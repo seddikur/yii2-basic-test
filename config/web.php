@@ -18,12 +18,9 @@ $config = [
     // перевести сайт в режим обслуживания
 //    'catchAll' => ['site/offline'],
     'modules' => [
-        'admin' => [
-            'class' => \app\modules\admin\Admin::class
-        ],
-        'user' => [
-            'class' => \app\modules\user\User::class
-        ],
+        'admin' => ['class' => \app\modules\admin\Admin::class],
+        'user' => ['class' => \app\modules\user\User::class],
+        'profile' => ['class' => \app\modules\profile\Module::class],
         'gridview' => ['class' => 'kartik\grid\Module']
     ],
     'components' => [

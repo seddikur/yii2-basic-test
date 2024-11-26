@@ -1,0 +1,133 @@
+@charset "UTF-8";
+.user-profile-view-page .profile-data-wrap {
+  display: flex;
+  flex-flow: column nowrap; }
+  @media screen and (min-width: 1024px) {
+    .user-profile-view-page .profile-data-wrap {
+      flex-flow: row nowrap; } }
+  .user-profile-view-page .profile-data-wrap .profile-image-block .user-profile-image {
+    padding: .5em 2em; }
+    .user-profile-view-page .profile-data-wrap .profile-image-block .user-profile-image .image {
+      width: 200px;
+      height: 200px;
+      margin: .5em auto;
+      border-radius: 50%;
+      border: 2px solid;
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat; }
+      @media screen and (min-width: 1024px) {
+        .user-profile-view-page .profile-data-wrap .profile-image-block .user-profile-image .image {
+          width: 80px;
+          height: 80px; } }
+  .user-profile-view-page .profile-data-wrap .profile-text-block .user-profile-name {
+    text-align: center;
+    border-bottom: 3px solid; }
+    @media screen and (min-width: 1024px) {
+      .user-profile-view-page .profile-data-wrap .profile-text-block .user-profile-name {
+        text-align: left;
+        margin: 1em 0 2em; } }
+    .user-profile-view-page .profile-data-wrap .profile-text-block .user-profile-name .title {
+      font-size: 1.4em;
+      color: #666;
+      font-weight: bold;
+      margin-bottom: 0; }
+      @media screen and (min-width: 1024px) {
+        .user-profile-view-page .profile-data-wrap .profile-text-block .user-profile-name .title {
+          font-size: 2em; } }
+    .user-profile-view-page .profile-data-wrap .profile-text-block .user-profile-name .position {
+      text-transform: lowercase; }
+  .user-profile-view-page .profile-data-wrap .profile-text-block .profile-values-section {
+    max-width: 600px; }
+    .user-profile-view-page .profile-data-wrap .profile-text-block .profile-values-section .section-title {
+      text-transform: uppercase;
+      font-weight: bold; }
+    .user-profile-view-page .profile-data-wrap .profile-text-block .profile-values-section .section-body {
+      padding-left: .5em; }
+      .user-profile-view-page .profile-data-wrap .profile-text-block .profile-values-section .section-body dl {
+        padding-bottom: 1em;
+        margin-bottom: 0; }
+        .user-profile-view-page .profile-data-wrap .profile-text-block .profile-values-section .section-body dl dt {
+          float: left;
+          margin-right: 1em; }
+
+.user-profile-edit-page .avatar-image-block {
+  margin-bottom: 1em; }
+  .user-profile-edit-page .avatar-image-block .user-avatar-image {
+    padding: 1em; }
+    .user-profile-edit-page .avatar-image-block .user-avatar-image .image {
+      width: 200px;
+      height: 200px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin: 0 auto; }
+  .user-profile-edit-page .avatar-image-block .image-actions {
+    text-align: center; }
+
+.user-profile-edit-page .splitter {
+  border-bottom: 2px solid #ddd;
+  position: relative;
+  margin-bottom: 1em;
+  height: 2em; }
+  .user-profile-edit-page .splitter .label {
+    /*position: absolute;*/
+    color: #333;
+    /*bottom: -1em;*/
+    /*right: 10%;*/
+    background-color: #ddd;
+    padding: .3em;
+    text-transform: uppercase;
+    font-weight: normal; }
+
+.user-profile-edit-page .contacts-list-wrap .contact-item {
+  border: 1px solid #eee;
+  background-color: #f7f7f7;
+  padding: 2em 1em 1em;
+  margin-top: .5em;
+  position: relative; }
+  .user-profile-edit-page .contacts-list-wrap .contact-item:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 12px;
+    font-size: .8em;
+    padding: .5em;
+    content: 'Сохранено';
+    color: green; }
+  .user-profile-edit-page .contacts-list-wrap .contact-item.not-saved {
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+    .user-profile-edit-page .contacts-list-wrap .contact-item.not-saved:before {
+      color: #aaa;
+      content: "Изменения не сохранены"; }
+  .user-profile-edit-page .contacts-list-wrap .contact-item.with-error {
+    -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    -moz-box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.8); }
+    .user-profile-edit-page .contacts-list-wrap .contact-item.with-error:before {
+      color: red;
+      content: "Cохранение невозможно"; }
+  .user-profile-edit-page .contacts-list-wrap .contact-item:first-child {
+    margin-top: 0; }
+  .user-profile-edit-page .contacts-list-wrap .contact-item .buttons-wrap {
+    text-align: right; }
+  .user-profile-edit-page .contacts-list-wrap .contact-item .error-message {
+    font-size: .8em;
+    color: red; }
+
+.user-profile-edit-page .buttons-wrap {
+  margin-top: 1em;
+  text-align: center; }
+
+.user-profile-edit-page .change-password-block .password-message {
+  text-align: center;
+  padding: 1em .5em; }
+  .user-profile-edit-page .change-password-block .password-message.warning {
+    color: red; }
+  .user-profile-edit-page .change-password-block .password-message.success {
+    color: green; }

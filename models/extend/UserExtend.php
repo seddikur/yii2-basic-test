@@ -13,6 +13,7 @@ use app\models\Users;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
 
 /**
@@ -20,18 +21,77 @@ use yii\web\IdentityInterface;
  * @property array $sexList
  * @property array $statusList
  * @property string $statusName
-// * @property array $userRoles
+ * // * @property array $userRoles
  * @property array $roleName
  * @property array $userRole
  *
-// * @property AuthAssignmentForm[] $authAssignments
-// * @property AuthItemForm[] $itemNames
-// * @property UserOauthKeyForm[] $keys
-// * @property DocumentForm $document
+ * // * @property AuthAssignmentForm[] $authAssignments
+ * // * @property AuthItemForm[] $itemNames
+ * // * @property UserOauthKeyForm[] $keys
+ * // * @property DocumentForm $document
  */
-
 class UserExtend extends Users implements IdentityInterface
 {
+//    public $id;
+//    public $username;
+//    public $auth_key;
+//    public $password_hash;
+//    public $password_reset_token;
+//    public $email;
+//    public $last_name;
+//    public $first_name;
+//    public $patronymic;
+//    public $avatar;
+//    public $verification_token;
+//    public $status;
+//    public $created_at;
+//    public $updated_at;
+//    public $role;
+//    public $ip;
+
+    /** @param Users */
+    private $_newsModel;
+
+    /** @var string путь до папки с аватарками */
+    public const PATH_AVATAR_IMAGE = '@backend/web/uploads/employee/avatars/';
+    /** @var string путь до папки с аватарками */
+    public const PATH_AVATAR_IMAGE_THUMBS = '@backend/web/uploads/employee/avatars/thumbs/';
+    /** @var string URL на папку с аватарками */
+    public const URL_AVATAR_IMAGE = '/uploads/employee/avatars/';
+    /** @var string URL на папку с миниатюрами аватарок */
+    public const URL_AVATAR_IMAGE_THUMBS = '/uploads/employee/avatars/thumbs/';
+    /** @var string URL до аватара-заглушки */
+    public const URL_AVATAR_NO_IMAGE = '/images/nouser.png';
+
+    /**
+     * UsersService constructor.
+     * @param array $config
+     */
+//    public function __construct($config = []) {
+//
+//        parent::__construct($config);
+//
+//        if(isset($config['id']) && $config['id']) {
+//            $this->_newsModel = Users::findOne($config['id']);
+//            $this->setAttributes($this->_newsModel->getAttributes());
+//        }
+//        else {
+//            $this->_newsModel = new Users();
+//            $this->attributes = $this->_newsModel->attributes;
+//        }
+//    }
+
+//    public function rules()
+//    {
+//        return $this->_newsModel->rules();
+//    }
+//
+//    public function attributeLabels()
+//    {
+//        return $this->_newsModel->attributeLabels();
+//    }
+
+
 //    public function getSexList()
 //    {
 //        return [
@@ -108,19 +168,19 @@ class UserExtend extends Users implements IdentityInterface
     {
         switch ($this->status) {
             case Constants::STATUS_WAIT:
-                return '<span class="badge bg-warning">'.$this->statusList[Constants::STATUS_WAIT].'</span>';
+                return '<span class="badge bg-warning">' . $this->statusList[Constants::STATUS_WAIT] . '</span>';
                 break;
             case Constants::STATUS_ACTIVE:
-                return '<span class="badge bg-success">'.$this->statusList[Constants::STATUS_ACTIVE].'</span>';
+                return '<span class="badge bg-success">' . $this->statusList[Constants::STATUS_ACTIVE] . '</span>';
                 break;
             case Constants::STATUS_BLOCKED:
-                return '<span class="badge bg-danger">'.$this->statusList[Constants::STATUS_BLOCKED].'</span>';
+                return '<span class="badge bg-danger">' . $this->statusList[Constants::STATUS_BLOCKED] . '</span>';
                 break;
         }
         return false;
     }
 
-     /**
+    /**
      * Статусы пользователя
      * @return array
      */
@@ -129,7 +189,7 @@ class UserExtend extends Users implements IdentityInterface
         return [
             Constants::STATUS_BLOCKED => Yii::t('app', 'Заблокирован'),
             Constants::STATUS_ACTIVE => Yii::t('app', 'Активен'),
-            Constants::STATUS_WAIT =>  Yii::t('app', 'Не активен'),
+            Constants::STATUS_WAIT => Yii::t('app', 'Не активен'),
         ];
     }
 
@@ -199,6 +259,10 @@ class UserExtend extends Users implements IdentityInterface
     {
         return $this->hasOne(GeoCityForm::className(), ['id' => 'city_id']);
     }
+
+    /*****************************************************************************************************************
+     *                                                                                                  GET PROPERTIES
+     *****************************************************************************************************************/
 
     /**
      * Поиск пользователя по Id
@@ -315,7 +379,7 @@ class UserExtend extends Users implements IdentityInterface
             return false;
         }
         $parts = explode('_', $token);
-        $timestamp = (int) end($parts);
+        $timestamp = (int)end($parts);
         return $timestamp + Yii::$app->params['user.passwordResetTokenExpire'] >= time();
     }
 
@@ -393,7 +457,6 @@ class UserExtend extends Users implements IdentityInterface
     }
 
 
-
     /**
      * Список всех пользователей
      * @param bool $show_id - показывать ID пользователя
@@ -407,7 +470,7 @@ class UserExtend extends Users implements IdentityInterface
             foreach ($model as $m) {
                 $name = ($m->last_name) ? $m->first_name . " " . $m->last_name : $m->first_name;
                 if ($show_id) {
-                    $name .= " (".$m->id.")";
+                    $name .= " (" . $m->id . ")";
                 }
                 $users[$m->id] = $name;
             }

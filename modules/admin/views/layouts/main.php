@@ -10,6 +10,7 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 use app\assets\BootstrapIconsAsset;
+use yii\widgets\Pjax;
 
 // регистрируем иконки
 BootstrapIconsAsset::register($this);
@@ -33,6 +34,52 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 </head>
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
+
+
+
+<?php
+\yii\bootstrap5\Modal::begin([
+    'id' => 'mainModal',
+    'size' => 'modal-lg',
+]);
+echo "<div id='modalContent'></div>";
+\yii\bootstrap5\Modal::end();
+?>
+
+
+<!--<div class="modal" id="mainModal" tabindex="-1" aria-labelledby="exampleMainModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">-->
+<!--    <div class="modal-dialog modal-dialog-centered">-->
+<!--        <div class="modal-content" style="padding:20px;">-->
+<!--            <div class="modal-header">-->
+<!---->
+<!--                <h4 class="modal-title"></h4>-->
+<!--                <button type="button" class="close btn-close" data-dismiss="modal">&times;</button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="spinner-border text-primary" style="display: block; margin-left: auto;margin-right: auto; margin-bottom:40px; margin-top:40px;" role="status">-->
+<!--                    <span class="sr-only">Loading...</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!---->
+<!--<div class="modal launch-pricing-modal" id="bigModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-lg">-->
+<!--        <div class="modal-content" style="min-height: 400px">-->
+<!--            <div class="modal-header">-->
+<!--                <h4 class="modal-title"></h4>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body pricing_page text-center pt-4 mb-4">-->
+<!--                <div class="spinner-border text-primary" style="display: block; margin-left: auto;margin-right: auto; margin-bottom:40px; margin-top:40px;" role="status">-->
+<!--                    <span class="sr-only">Loading...</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
 
 <header id="header">
     <?php
@@ -90,6 +137,10 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <?= $content ?>
     </div>
 </main>
+
+<?php Pjax::begin(['id' => 'pjaxModalUniversal']); ?><?php Pjax::end(); ?>
+
+
 
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">

@@ -7,6 +7,7 @@ use app\models\ProjectsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Yii;
 
 /**
  * ProjectsController implements the CRUD actions for Projects model.
@@ -32,8 +33,6 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Lists all Projects models.
-     *
      * @return string
      */
     public function actionIndex()
@@ -55,10 +54,16 @@ class ProjectsController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+//        if (!Yii::$app->request->isPjax) {
+//            return $this->redirect(['index']);
+//        }
+
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
+
+
 
     /**
      * Creates a new Projects model.

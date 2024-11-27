@@ -44,8 +44,8 @@ class OrganizationUser extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
-            'organization_id' => 'Organization ID',
+            'user_id' => 'Пользователь',
+            'organization_id' => 'Организация',
         ];
     }
 

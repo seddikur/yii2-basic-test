@@ -3,6 +3,8 @@
 namespace app\modules\admin\controllers;
 
 use app\models\extend\UserExtend;
+use app\models\Organizations;
+use app\models\OrganizationUser;
 use app\models\search\UserSearch;
 use app\models\Users;
 use yii\data\ActiveDataProvider;
@@ -60,8 +62,19 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $query = OrganizationUser::find()
+            ->where(['user_id' => $id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ],
+            ]
+        ]);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -98,6 +111,52 @@ class UserController extends Controller
         return $this->render('create', [
             'model' => $modelUserForm,
         ]);
+    }
+
+    /**
+     * @param $event_id
+     * @return string|\yii\web\Response
+     */
+    public function actionCreate_org($id)
+    {
+        $model = new OrganizationUser();
+        $model->user_id = $id;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', "Успешно добавлена организация");
+            return $this->redirect(['view', 'id' => $model->user_id]);
+        }
+        return $this->renderAjax('create_org', [
+            'model' => $model,
+            'organization' => Organizations::find()->asArray()->all(),
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdate_org($id)
+    {
+        $model = OrganizationUser::findOne($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', "Успешно изменена организация");
+            return $this->redirect(['view', 'id' => $model->user_id]);
+        }
+
+        return $this->renderAjax('update_org', [
+            'model' => $model,
+            'organization' => Organizations::find()->asArray()->all(),
+        ]);
+    }
+
+    public function actionDelete_org($id)
+    {
+        $model = OrganizationUser::findOne($id);
+        $model->delete();
+        \Yii::$app->session->setFlash('success', "Успешно удалена организация");
+        return $this->redirect(['view', 'id' => $model->user_id]);
     }
 
     /**

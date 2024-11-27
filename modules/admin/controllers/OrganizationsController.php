@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\models\Organizations;
+use app\models\OrganizationUser;
 use app\models\search\OrganizationsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -111,8 +112,8 @@ class OrganizationsController extends Controller
      */
     public function actionDelete($id)
     {
+        OrganizationUser::deleteAll(['organization_id' => $id]);
         $this->findModel($id)->delete();
-
         return $this->redirect(['index']);
     }
 

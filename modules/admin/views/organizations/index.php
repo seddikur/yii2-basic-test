@@ -10,7 +10,7 @@ use kartik\grid\GridView;
 /** @var app\models\search\OrganizationsSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Organizations';
+$this->title = 'Организации';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="organizations-index">

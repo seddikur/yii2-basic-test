@@ -13,7 +13,7 @@ class UserAvatarImageService
     public const URL_AVATAR_NO_IMAGE = '/images/nouser.png';
 
     /**
-     * Returns an URL to the employee avatar image
+     * Возвращает URL-адрес изображения аватара сотрудника
      * @param Users $users
      * @return string
      */
@@ -27,7 +27,7 @@ class UserAvatarImageService
     }
 
     /**
-     * Returns an URL to the dummy avatar image
+     * Возвращает URL-адрес фиктивного изображения аватара
      * @return string
      */
     public function getDefaultImageUrl(): string

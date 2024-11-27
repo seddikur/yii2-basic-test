@@ -92,16 +92,16 @@ echo "<div id='modalContent'></div>";
         'options' => ['class' => 'navbar-nav'],
         'items' => [
             ['label' => 'Сайт', 'url' => ['/site']],
-            ['label' => 'Проекты', 'url' => ['/admin/projects']],
+            //['label' => 'Проекты', 'url' => ['/admin/projects']],
             ['label' => 'Организации', 'url' => ['/admin/organizations']],
             ['label' => 'Пользователи', 'url' => ['/admin/user/index'], 'visible' => 1],
             [
                 'label' => Yii::$app->user->identity->username,
                 'items' => [
-                    [
-                        'label' => 'Профиль' ,
-                        'url' => ['/user/profile/index'],
-                    ],
+//                    [
+//                        'label' => 'Профиль' ,
+//                        'url' => ['/user/profile/index'],
+//                    ],
                     '<div class="dropdown text-end"></div>',
                     [
                         'label' => 'Выйти',

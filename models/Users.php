@@ -36,6 +36,22 @@ class Users extends \yii\db\ActiveRecord
     {
         return 'users';
     }
+    /** @var string путь до папки с аватарками */
+    public const PATH_AVATAR_IMAGE = '@app/web/uploads/employee/avatars/';
+    /** @var string путь до папки с аватарками */
+    public const PATH_AVATAR_IMAGE_THUMBS = '@app/web/uploads/employee/avatars/thumbs/';
+    /** @var string URL на папку с аватарками */
+    public const URL_AVATAR_IMAGE = '/uploads/employee/avatars/';
+    /** @var string URL на папку с миниатюрами аватарок */
+    public const URL_AVATAR_IMAGE_THUMBS = '/uploads/employee/avatars/thumbs/';
+    /** @var string URL до аватара-заглушки */
+    public const URL_AVATAR_NO_IMAGE = '/images/nouser.png';
+
+
+    /**
+     * @var bool Галочка - удалить аватар.
+     */
+    public $remove_avatar;
 
     /**
      * {@inheritdoc}
@@ -99,6 +115,27 @@ class Users extends \yii\db\ActiveRecord
     public function isAdmin()
     {
         return !empty(\Yii::$app->authManager->getAssignment('admin', \Yii::$app->user->id));
+    }
+
+    /**
+     * Проверка существования папки с аватарками
+     * @return bool|string - путь до папки с аватарками
+     */
+    public static function isPathAvatar()
+    {
+        $path = Yii::getAlias(self::PATH_AVATAR_IMAGE);
+        if (!is_dir($path)) {
+            if (!mkdir($path, 0777, true) && !mkdir($path . 'thumbs')) {
+                return $path;
+            }
+        }
+        $pathThumbs = $path . 'thumbs';
+        if (!is_dir($pathThumbs)) {
+            if (!mkdir($pathThumbs)) {
+                return $path;
+            }
+        }
+        return $path;
     }
 
     /**

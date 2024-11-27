@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 
 $this->title = 'Пользователи';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="user-index">
 
@@ -95,11 +96,12 @@ $this->params['breadcrumbs'][] = $this->title;
 //                        return Yii::$app->getUser()->getId() === 1;
 //                    },
                     'login' => function (Users $model) {
-                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+//                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+                        return $model->isAdmin();
                     },
                     'update' => function (Users $model) {
 //                    return Yii::$app->getUser()->getId() === 1;
-                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+                        return $model->isAdmin();
                     },
 
                     'delete' => function (Users $model) {
@@ -108,7 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             return false;
                         }
                         // Удалять может только админ
-                        return Yii::$app->user->identity->role == \app\models\Constants::ROLE_ADMIN;
+                        return $model->isAdmin();
                     },
                 ]
             ],

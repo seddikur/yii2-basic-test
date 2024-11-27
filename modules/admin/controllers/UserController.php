@@ -5,6 +5,7 @@ namespace app\modules\admin\controllers;
 use app\models\extend\UserExtend;
 use app\models\Organizations;
 use app\models\OrganizationUser;
+use app\models\Passwords;
 use app\models\search\UserSearch;
 use app\models\Users;
 use yii\data\ActiveDataProvider;
@@ -72,9 +73,20 @@ class UserController extends Controller
                 ],
             ]
         ]);
+        $query_pass = Passwords::find()
+            ->where(['user_id' => $id]);
+        $dataProviderPassword = new ActiveDataProvider([
+            'query' => $query_pass,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ],
+            ]
+        ]);
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'dataProviderPassword' => $dataProviderPassword
         ]);
     }
 
@@ -88,24 +100,9 @@ class UserController extends Controller
         $modelUserForm = new UserForm();
         $modelUserForm->scenario = 'create-user';
 
-//        if ($this->request->isPost) {
-//            if ($modelUserForm->load($this->request->post()) && $modelUserForm->save()) {
-//                return $this->redirect(['index']);
-//            }
-//        }
-//        else {
-//            $modelUserForm->loadDefaultValues();
-//        }
-
         if ($modelUserForm->load(Yii::$app->request->post()) && $modelUserForm->save()) {
             Yii::$app->getSession()->setFlash('success', 'Пользователь успешно добавлен');
-//        if ($modelUserForm->load(Yii::$app->request->post())) {
-//            if($modelUserForm->save()){
                 return $this->redirect(['index']);
-//            }else{
-//                VarDumper::dump($modelUserForm->errors);
-//            }
-
         }
 
         return $this->render('create', [

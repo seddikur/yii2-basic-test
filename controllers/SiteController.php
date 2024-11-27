@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\extend\UserExtend;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
@@ -77,8 +78,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+//        return $this->render('index');
+        if ( Yii::$app->user->isGuest ){
+            return Yii::$app->getResponse()->redirect(array(Url::to(['site/login'])));
+        }else{
+            $this->response->redirect('admin');
+        }
+
     }
+
 
     /**
      *
@@ -104,8 +112,10 @@ class SiteController extends Controller
     {
         // Уже авторизированных отправляем на домашнюю страницу
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->response->redirect('admin');
+//            return $this->goHome();
         }
+        $this->layout = 'blank';
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -138,15 +148,21 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
+        if ( Yii::$app->user->isGuest ){
+            return Yii::$app->getResponse()->redirect(array(Url::to(['site/login'])));
+        }else{
+            $this->response->redirect('admin');
         }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
+
+//        $model = new ContactForm();
+//        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+//            Yii::$app->session->setFlash('contactFormSubmitted');
+//
+//            return $this->refresh();
+//        }
+//        return $this->render('contact', [
+//            'model' => $model,
+//        ]);
     }
 
     /**
@@ -156,7 +172,12 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        return $this->render('about');
+        if ( Yii::$app->user->isGuest ){
+            return Yii::$app->getResponse()->redirect(array(Url::to(['site/login'])));
+        }else{
+            $this->response->redirect('admin');
+        }
+//        return $this->render('about');
     }
 
     /**

@@ -58,6 +58,48 @@ $password = md5($salt . $password); // соленый пароль
 echo 'Соль';
 //\yii\helpers\VarDumper::dump(Yii::$app->user->identity->auth_key, 10, true);
 
+
+echo '<br>';
+define('ENCRYPTION_KEY', 'ab86d144e3f080b61c7c2e43');
+
+// Encrypt
+$plaintext = "Тестируем обратимое шифрование на php 7";
+echo $plaintext;
+echo '<br>';
+$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+$iv = openssl_random_pseudo_bytes($ivlen);
+$ciphertext_raw = openssl_encrypt($plaintext, $cipher, ENCRYPTION_KEY, $options=OPENSSL_RAW_DATA, $iv);
+$hmac = hash_hmac('sha256', $ciphertext_raw, ENCRYPTION_KEY, $as_binary=true);
+$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+echo 'Дешифрованный пароль';
+echo '<br>';
+echo $ciphertext.'<br>';
+
+/**
+ * Обратимое шифрование на PHP 7 библиотекой OpenSSL
+ * Функции библиотеки Mcrypt, такие как mcrypt_encrypt и mcrypt_decrypt считаются устаревшими и не рекомендуют их использовать.
+ * Начиная с PHP 7.2 библиотеку Mcrypt перенесли в PECL.
+ * Вместо MCrypt предлагается использовать openssl_encrypt и openssl_decrypt из библиотеки OpenSSL.
+ */
+// Decrypt
+$c = base64_decode($ciphertext);
+$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+
+
+$iv = substr($c, 0, $ivlen);
+echo $iv;
+echo '<br>';
+$hmac = substr($c, $ivlen, $sha2len=32);
+$ciphertext_raw = substr($c, $ivlen+$sha2len);
+$plaintext = openssl_decrypt($ciphertext_raw, $cipher, ENCRYPTION_KEY, $options=OPENSSL_RAW_DATA, $iv);
+$calcmac = hash_hmac('sha256', $ciphertext_raw, ENCRYPTION_KEY, $as_binary=true);
+if (hash_equals($hmac, $calcmac))
+{
+    echo 'пароль';
+    echo '<br>';
+    echo $plaintext;
+}
+
 ?>
     <?php $form = ActiveForm::begin(); ?>
 

@@ -31,11 +31,25 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'sault',
-            'password',
+//            'sault',
+//            'password',
             'hash',
-            'user_id',
-            //'organization_id',
+            [
+                'format' => 'raw',
+                'attribute' => 'user_id',
+                /** @var \app\models\Users $data */
+                'value' => function ($data) {
+                    return $data->user->username;
+                },
+            ],
+            [
+                'format' => 'raw',
+                'attribute' => 'organization_id',
+                /** @var \app\models\Organizations $data */
+                'value' => function ($data) {
+                    return $data->organization->title;
+                },
+            ],
             //'created_at',
             //'updated_at',
             //'ip',

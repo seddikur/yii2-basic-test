@@ -4,15 +4,34 @@ namespace app\modules\admin\controllers;
 
 use app\models\Passwords;
 use app\models\search\PasswordsSearch;
+use app\modules\admin\Admin;
+use app\modules\profile\services\UserProfileRepository;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\modules\admin\services\PasswordEncryption;
 
 /**
  * PasswordsController implements the CRUD actions for Passwords model.
  */
 class PasswordsController extends Controller
 {
+
+    /** @var PasswordEncryption */
+    protected $passwordEncryption;
+
+    public function __construct(
+        string             $id,
+        Admin              $module,
+        PasswordEncryption $passwordEncryption,
+        array              $config = []
+    )
+    {
+        parent::__construct($id, $module, $config);
+        $this->passwordEncryption = $passwordEncryption;
+    }
+
     /**
      * @inheritDoc
      */
@@ -57,6 +76,7 @@ class PasswordsController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'passwordEncryption' => $this->passwordEncryption,
         ]);
     }
 
@@ -68,10 +88,22 @@ class PasswordsController extends Controller
     public function actionCreate()
     {
         $model = new Passwords();
+//        VarDumper::dump($this->passwordEncryption->decryptingPassword(), 10,true);
+//        VarDumper::dump($this->passwordEncryption->reverseEncryption(), 10,true);
 
         if ($this->request->isPost) {
+            $model->sault = \Yii::$app->user->identity->auth_key;
+            $model->password = $this->passwordEncryption->decryptingPassword($this->request->post()['Passwords']['password_is_not_decrypted']);
+            $model->hash = bin2hex($this->passwordEncryption->randomPseudoBytes());
+
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
+            }
+            if (!$model->save()) {
+                echo "MODEL NOT SAVED";
+                print_r($model->getAttributes());
+                print_r($model->getErrors());
+                exit;
             }
         } else {
             $model->loadDefaultValues();

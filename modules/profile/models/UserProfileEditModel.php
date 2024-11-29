@@ -10,7 +10,7 @@ use yii\base\Model;
 use yii\web\UploadedFile;
 
 /**
- * @author Kovalev Roman <epoxxid@gmail.com>
+ *
  */
 class UserProfileEditModel extends Model
 {

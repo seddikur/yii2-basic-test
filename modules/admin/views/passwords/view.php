@@ -24,6 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+
+        <?php
+       $view_paeeword = $passwordEncryption->reverseEncryption($model->password);
+           \yii\helpers\VarDumper::dump($view_paeeword, 10, true);
+
+
+        ?>
     </p>
 
     <?= DetailView::widget([

@@ -9,11 +9,15 @@ return [
     ],
     'user' => [
         'type' => 1,
-        'description' => 'Пользователь',
+        'description' => 'Пользователи',
+    ],
+    'moder' => [
+        'type' => 1,
+        'description' => 'Модераторы',
     ],
     'admin' => [
         'type' => 1,
-        'description' => 'Администратор',
+        'description' => 'Администраторы',
         'children' => [
             'user',
             'admin',

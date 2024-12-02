@@ -2,12 +2,14 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Constants;
 use app\models\Organizations;
 use app\models\OrganizationUser;
 use app\models\Passwords;
 use app\models\search\OrganizationsSearch;
 use app\modules\admin\Admin;
 use app\modules\admin\services\PasswordEncryption;
+use yii\filters\AccessControl;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -41,6 +43,26 @@ class OrganizationsController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view', 'update', 'create', 'view-password'],
+                            'allow' => true,
+//                            'roles' => [Constants::ROLE_ADMIN]
+
+                            'matchCallback' => function () {
+                                // Если пользователь имеет полномочия администратора, то правило доступа сработает.
+                                return \Yii::$app->user->identity->role == Constants::ROLE_ADMIN;
+                            },
+                            'denyCallback' => function () {
+                                // Если пользователь не подпадает под все условия, то завершаем работы и выдаем своё сообщение.
+                                die('Эта страница доступна только администратору!');
+                            },
+                        ],
+
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [

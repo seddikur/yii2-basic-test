@@ -16,9 +16,9 @@ class Constants
     const STATUS_WAIT = 2;      // ожидает подтверждения
 
     // Статусы ролей
-    const ROLE_ADMIN = 'admin';   // заблокирован
-    const ROLE_MODER = 'moder';    // активен
-    const ROLE_USER = 'user';      // ожидает подтверждения
+    const ROLE_ADMIN = 'admin';   // администраторы
+    const ROLE_MODER = 'moder';    // модераторы
+    const ROLE_USER = 'user';      // пользователи
 
 
     // Доступы пользователя

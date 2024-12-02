@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Constants;
 use app\models\extend\UserExtend;
 use app\models\Organizations;
 use app\models\OrganizationUser;
@@ -9,6 +10,7 @@ use app\models\Passwords;
 use app\models\search\UserSearch;
 use app\models\Users;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
@@ -29,6 +31,26 @@ class UserController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index','view','update', 'create'],
+                            'allow' => true,
+//                            'roles' => [Constants::ROLE_ADMIN]
+
+                            'matchCallback' => function () {
+                                // Если пользователь имеет полномочия администратора, то правило доступа сработает.
+                                return Yii::$app->user->identity->role == Constants::ROLE_ADMIN;
+                            },
+                            'denyCallback'  => function () {
+                                // Если пользователь не подпадает под все условия, то завершаем работы и выдаем своё сообщение.
+                                die('Эта страница доступна только администратору!');
+                            },
+                        ],
+
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -150,6 +172,7 @@ class UserController extends Controller
 
     public function actionDelete_org($id)
     {
+        Passwords::deleteAll(['user_id' => $id]);
         $model = OrganizationUser::findOne($id);
         $model->delete();
         \Yii::$app->session->setFlash('success', "Успешно удалена организация");
@@ -190,6 +213,8 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
+        OrganizationUser::deleteAll(['user_id' => $id]);
+        Passwords::deleteAll(['user_id' => $id]);
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

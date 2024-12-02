@@ -6,19 +6,23 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\Users;
+
 /** @var yii\web\View $this */
 /** @var app\models\search\PasswordsSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Passwords';
+$this->title = 'Пароли';
 $this->params['breadcrumbs'][] = $this->title;
+
+//$user =  Yii::$app->getUser()->getId();
 ?>
 <div class="passwords-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Passwords', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Новый пароль', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -54,14 +58,69 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updated_at',
             //'ip',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Passwords $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                'class' => 'yii\grid\ActionColumn',
+//                'template' => '{view}&nbsp;&nbsp;{permit}&nbsp;&nbsp;{delete}',
+                'template' => '{view_password} {update}  {delete}',
+                'buttons' => [
+                    'view_password' => function ($url, $model, $key) {
+                        return Html::button('<i class="bi bi-shield-lock"></i>', [
+                            'value' => Url::to(['view-password', 'id' => $model->id]),
+                            'id' => 'btn-view-pass',
+                            'class' => 'btn btn-light',
+                            'data-pjax' => '0',
+                            'title'=>'Пароль'
+                        ]);
+                    },
+                ],
+                'visibleButtons' => [
+                    //  только админ
+                    'view_password' => Yii::$app->user->identity->isAdmin(),
+                    'update' => Yii::$app->user->identity->isAdmin(),
+                    'delete' => Yii::$app->user->identity->isAdmin(),
+                ]
             ],
         ],
     ]); ?>
-
     <?php Pjax::end(); ?>
 
 </div>
+<?php
+$script = <<< JS
+//функция запуск модального окна по клику кнопки btn-view-pass
+// модальное лежит в layout/index
+    $('button#btn-view-pass').click(function(){
+        console.log('клик');
+        
+        
+        var container = $('#modalContent');
+        var modal =  $('#mainModalSmall');
+        container.html('Загрузка данных...');
+        // modal.modal('show')
+        //     .find('#modalContent')
+        //     .load($(this).attr('value'));
+        
+        //   if ($('#mainModalSmal').data('bs.modal').isShown) {
+           if (modal.isShown) {
+           modal.find('#modalContent')
+                    .load($(this).attr('value'));
+            //динамически устанавливайте заголовок для модального
+            document.getElementById('modalHeader').innerHTML = '<h4>' + $(this).attr('title') + '</h4>';
+        } else {
+            //если модальный режим не открыт, откройте его и загрузите содержимое
+            modal.modal('show')
+                    .find('#modalContent')
+                    .load($(this).attr('value'));
+             //динамически устанавливайте заголовок для модального
+            document.getElementById('modalHeader').innerHTML = '<h4>' + $(this).attr('title') + '</h4>';
+        }
+        //скрыть через 5сек
+          setTimeout(function(){
+        modal.modal('hide')
+        .find('#modalContent')
+        .empty();
+         }, 5000);
+    });
+
+JS;
+$this->registerJs($script);
+?>

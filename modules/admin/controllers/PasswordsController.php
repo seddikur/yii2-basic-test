@@ -2,10 +2,12 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Constants;
 use app\models\Passwords;
 use app\models\search\PasswordsSearch;
 use app\modules\admin\Admin;
 use app\modules\profile\services\UserProfileRepository;
+use yii\filters\AccessControl;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -40,6 +42,26 @@ class PasswordsController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index', 'view', 'update', 'create', 'view-password'],
+                            'allow' => true,
+//                            'roles' => [Constants::ROLE_ADMIN]
+
+                            'matchCallback' => function () {
+                                // Если пользователь имеет полномочия администратора, то правило доступа сработает.
+                                return \Yii::$app->user->identity->role == Constants::ROLE_ADMIN;
+                            },
+                            'denyCallback' => function () {
+                                // Если пользователь не подпадает под все условия, то завершаем работы и выдаем своё сообщение.
+                                die('Эта страница доступна только администратору!');
+                            },
+                        ],
+
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -76,8 +98,23 @@ class PasswordsController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'passwordEncryption' => $this->passwordEncryption,
         ]);
+    }
+
+    /**
+     * Модальное окно просмотре пароля
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionViewPassword($id)
+    {
+        $model = $this->findModel($id);
+        $view_password = null;
+        if ($model) {
+            $view_password = $this->passwordEncryption->reverseEncryption($model->password);
+        }
+        return $this->renderAjax('view-password', compact('view_password'));
     }
 
     /**
@@ -97,7 +134,7 @@ class PasswordsController extends Controller
             $model->hash = bin2hex($this->passwordEncryption->randomPseudoBytes());
 
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
             if (!$model->save()) {
                 echo "MODEL NOT SAVED";

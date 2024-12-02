@@ -184,7 +184,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 <?php
 $script = <<< JS
-//функция обновления данных
+//функция запуск модального окна по клику кнопки btn-update-org
+// модальное лежит в layout/index
     $('button#btn-update-org').click(function(){
     
         console.log('клик');

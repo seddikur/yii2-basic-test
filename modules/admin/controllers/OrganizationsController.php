@@ -4,7 +4,11 @@ namespace app\modules\admin\controllers;
 
 use app\models\Organizations;
 use app\models\OrganizationUser;
+use app\models\Passwords;
 use app\models\search\OrganizationsSearch;
+use app\modules\admin\Admin;
+use app\modules\admin\services\PasswordEncryption;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +18,21 @@ use yii\filters\VerbFilter;
  */
 class OrganizationsController extends Controller
 {
+
+    /** @var PasswordEncryption */
+    protected $passwordEncryption;
+
+    public function __construct(
+        string             $id,
+        Admin              $module,
+        PasswordEncryption $passwordEncryption,
+        array              $config = []
+    )
+    {
+        parent::__construct($id, $module, $config);
+        $this->passwordEncryption = $passwordEncryption;
+    }
+
     /**
      * @inheritDoc
      */
@@ -104,6 +123,26 @@ class OrganizationsController extends Controller
     }
 
     /**
+     * Модальное окно просмотре пароля
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionViewPassword($id)
+    {
+        $model = Passwords::find()
+            ->where(['organization_id'=>$id])
+            ->andWhere(['user_id'=>\Yii::$app->user->identity->id])
+            ->one();
+        $view_password = null;
+        if ($model){
+            $view_password = $this->passwordEncryption->reverseEncryption($model->password);
+        }
+
+        return $this->renderAjax('view-password', compact('view_password'));
+    }
+
+    /**
      * Deletes an existing Organizations model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
@@ -113,6 +152,7 @@ class OrganizationsController extends Controller
     public function actionDelete($id)
     {
         OrganizationUser::deleteAll(['organization_id' => $id]);
+        Passwords::deleteAll(['organization_id' => $id]);
         $this->findModel($id)->delete();
         return $this->redirect(['index']);
     }

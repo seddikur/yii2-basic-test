@@ -45,6 +45,16 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 echo "<div id='modalContent'></div>";
 \yii\bootstrap5\Modal::end();
 ?>
+<?php
+\yii\bootstrap5\Modal::begin([
+    'id' => 'mainModalSmall',
+    'size' => 'modal-sm',
+    'headerOptions' => ['id' => 'modalHeader'],
+]);
+//echo "<div id='modalContent'>Поиск ...</div>";
+echo '<div id="modalContent"><div style="text-align:center"><img src="'.\yii\helpers\Url::to('/images/preloader.gif').'"></div></div>';
+\yii\bootstrap5\Modal::end();
+?>
 
 
 <!--<div class="modal" id="mainModal" tabindex="-1" aria-labelledby="exampleMainModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">-->
@@ -91,10 +101,11 @@ echo "<div id='modalContent'></div>";
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Сайт', 'url' => ['/site']],
+            ['label' => 'Главная', 'url' => ['/site']],
             //['label' => 'Проекты', 'url' => ['/admin/projects']],
             ['label' => 'Организации', 'url' => ['/admin/organizations']],
-            ['label' => 'Пользователи', 'url' => ['/admin/user/index'], 'visible' => 1],
+            ['label' => 'Пользователи', 'url' => ['/admin/user/index'], 'visible' => Yii::$app->user->identity->isAdmin()],
+            ['label' => 'Пароли', 'url' => ['/admin/passwords/index'], 'visible' => Yii::$app->user->identity->isAdmin()],
             [
                 'label' => Yii::$app->user->identity->username,
                 'items' => [

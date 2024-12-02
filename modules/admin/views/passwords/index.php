@@ -1,12 +1,14 @@
 <?php
 
 use app\models\Passwords;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use app\models\Users;
+use  kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var app\models\search\PasswordsSearch $searchModel */
@@ -45,6 +47,37 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) {
                     return $data->user->username;
                 },
+//                'filter' => Select2::widget([
+//
+//                    'data' => ArrayHelper::map(
+//                        Users::find()
+//                            ->asArray()
+//                            ->all(),
+//                        'id', 'username'),
+//                    'model' => $searchModel,
+//                    'attribute' => 'user_id',
+//                    'options' => ['multiple' => true,]
+//                ]),
+                'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'user_id',
+                    'data' => ArrayHelper::map(
+                        Users::find()
+                            ->asArray()
+                            ->all(),
+                        'id', 'username'),
+                    'hideSearch' => true,
+                    'options' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'все'
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'multiple' => false,
+                    ]
+                ]),
+//                'options' => ['width' => '20%'],
+
             ],
             [
                 'format' => 'raw',
@@ -53,6 +86,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) {
                     return $data->organization->title;
                 },
+                'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'organization_id',
+                    'data' => ArrayHelper::map(
+                        \app\models\Organizations::find()
+                            ->asArray()
+                            ->all(),
+                        'id', 'title'),
+                    'hideSearch' => true,
+                    'options' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'все'
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'multiple' => false,
+                    ]
+                ]),
             ],
             //'created_at',
             //'updated_at',

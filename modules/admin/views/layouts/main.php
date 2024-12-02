@@ -101,9 +101,9 @@ echo '<div id="modalContent"><div style="text-align:center"><img src="'.\yii\hel
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Главная', 'url' => ['/site']],
+            ['label' => 'Главная', 'url' => ['/site'], 'visible' => Yii::$app->user->identity->isAdmin()],
             //['label' => 'Проекты', 'url' => ['/admin/projects']],
-            ['label' => 'Организации', 'url' => ['/admin/organizations']],
+            ['label' => 'Организации', 'url' => ['/admin/organizations'], 'visible' => Yii::$app->user->identity->isAdmin()],
             ['label' => 'Пользователи', 'url' => ['/admin/user/index'], 'visible' => Yii::$app->user->identity->isAdmin()],
             ['label' => 'Пароли', 'url' => ['/admin/passwords/index'], 'visible' => Yii::$app->user->identity->isAdmin()],
             [

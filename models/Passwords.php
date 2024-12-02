@@ -66,6 +66,7 @@ class Passwords extends \yii\db\ActiveRecord
             'created_at' => 'Создан',
             'updated_at' => 'Изменен',
             'ip' => 'Ip',
+            'password_is_not_decrypted'=> 'Пароль'
         ];
     }
 

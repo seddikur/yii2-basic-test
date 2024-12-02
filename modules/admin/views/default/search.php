@@ -53,7 +53,7 @@ use yii\bootstrap4\Html;
     <?php
     echo Html::beginForm();
     echo Html::input('text', 'search', '', [
-        'placeholder' => 'Показать пароль по ключу',
+        'placeholder' => 'Показать пароль по hash',
         'id' => 'search'
     ]);
     //    echo Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-sm btn-info']);

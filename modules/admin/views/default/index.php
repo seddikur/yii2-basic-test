@@ -1,10 +1,10 @@
 <?php
 use yii\helpers\Html;
 
-$this->title = 'Поиск пароля по ключу';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Поиск пароля по hash';
+//$this->params['breadcrumbs'][] = $this->title;
 ?>
-    <h3><?= Html::encode($this->title) ?></h3>
+
 
 <div class="admin-default-index">
     <?php

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var app\models\Passwords $model */
 
-$this->title = 'Create Passwords';
+$this->title = 'Новый пароль';
 $this->params['breadcrumbs'][] = ['label' => 'Passwords', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

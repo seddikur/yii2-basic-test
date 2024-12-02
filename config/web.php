@@ -6,7 +6,7 @@ require __DIR__ . '/functions.php';
 
 $config = [
     'id' => 'basic',
-    'name'=>'Название',
+    'name'=>'PassMGR',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language'=>'ru',

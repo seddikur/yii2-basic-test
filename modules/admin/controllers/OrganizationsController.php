@@ -47,7 +47,7 @@ class OrganizationsController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index', 'view', 'update', 'create', 'view-password'],
+                            'actions' => ['index', 'view', 'update', 'create', 'view-password', 'delete'],
                             'allow' => true,
 //                            'roles' => [Constants::ROLE_ADMIN]
 
@@ -113,7 +113,8 @@ class OrganizationsController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                \Yii::$app->session->setFlash('success', 'Организация '.$model->title.' успешно добавлена!');
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();
@@ -136,7 +137,8 @@ class OrganizationsController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            \Yii::$app->session->setFlash('success', 'Организация '.$model->title.' успешно изменена!');
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -145,7 +147,7 @@ class OrganizationsController extends Controller
     }
 
     /**
-     * Модальное окно просмотре пароля
+     * Модальное окно просмотр пароля
      * @param $id
      * @return string
      * @throws NotFoundHttpException
@@ -176,6 +178,7 @@ class OrganizationsController extends Controller
         OrganizationUser::deleteAll(['organization_id' => $id]);
         Passwords::deleteAll(['organization_id' => $id]);
         $this->findModel($id)->delete();
+        \Yii::$app->session->setFlash('danger', 'Организация удалена!');
         return $this->redirect(['index']);
     }
 

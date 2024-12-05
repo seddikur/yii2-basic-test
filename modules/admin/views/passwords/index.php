@@ -14,17 +14,17 @@ use  kartik\select2\Select2;
 /** @var app\models\search\PasswordsSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Пароли';
+$this->title = 'Список паролей';
 $this->params['breadcrumbs'][] = $this->title;
 
 //$user =  Yii::$app->getUser()->getId();
 ?>
 <div class="passwords-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <p>
-        <?= Html::a('Новый пароль', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить пароль', ['create'], ['class' => 'btn btn-outline-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -36,49 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+//            'id',
 //            'sault',
 //            'password',
             'hash',
-            [
-                'format' => 'raw',
-                'attribute' => 'user_id',
-                /** @var \app\models\Users $data */
-                'value' => function ($data) {
-                    return $data->user->username;
-                },
-//                'filter' => Select2::widget([
-//
-//                    'data' => ArrayHelper::map(
-//                        Users::find()
-//                            ->asArray()
-//                            ->all(),
-//                        'id', 'username'),
-//                    'model' => $searchModel,
-//                    'attribute' => 'user_id',
-//                    'options' => ['multiple' => true,]
-//                ]),
-                'filter' => Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'user_id',
-                    'data' => ArrayHelper::map(
-                        Users::find()
-                            ->asArray()
-                            ->all(),
-                        'id', 'username'),
-                    'hideSearch' => true,
-                    'options' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'все'
-                    ],
-                    'pluginOptions' => [
-                        'allowClear' => true,
-                        'multiple' => false,
-                    ]
-                ]),
-//                'options' => ['width' => '20%'],
 
-            ],
             [
                 'format' => 'raw',
                 'attribute' => 'organization_id',
@@ -105,13 +67,47 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]),
             ],
+            [
+                'format' => 'raw',
+                'attribute' => 'service_id',
+                /** @var \app\models\Service $data */
+                'value' => function ($data) {
+                    return $data->service->title;
+                },
+                'filter' => Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'service_id',
+                    'data' => ArrayHelper::map(
+                        \app\models\Service::find()
+                            ->asArray()
+                            ->all(),
+                        'id', 'title'),
+                    'hideSearch' => true,
+                    'options' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'все'
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'multiple' => false,
+                    ]
+                ]),
+            ],
+            [
+                'format' => 'raw',
+                'attribute' => 'Доступен для групп',
+                /** @var \app\models\Users $data */
+                'value' => function ($data) {
+                    return $data->getGroup();
+                },
+            ],
             //'created_at',
             //'updated_at',
             //'ip',
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => \app\components\classes\CustomActionColumnClass::class,
 //                'template' => '{view}&nbsp;&nbsp;{permit}&nbsp;&nbsp;{delete}',
-                'template' => '{view_password} {update}  {delete}',
+                'template' => '{view_password} {update} &nbsp; {delete}',
                 'buttons' => [
                     'view_password' => function ($url, $model, $key) {
                         return Html::button('<i class="bi bi-shield-lock"></i>', [
@@ -121,6 +117,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-pjax' => '0',
                             'title'=>'Пароль'
                         ]);
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a('<i class="bi bi-trash text-danger"></i>',
+                            $url, ['data-confirm' =>  'Вы уверены что хотите удалить пароль от сервиса- ' . $model->service->title . '?',
+                                'data-method' => 'post',
+                                'data-pjax' => '1',
+                            ]);
                     },
                 ],
                 'visibleButtons' => [

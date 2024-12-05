@@ -35,7 +35,7 @@ class UserController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index','view','update', 'create'],
+                            'actions' => ['index','view','update', 'create', 'delete'],
                             'allow' => true,
 //                            'roles' => [Constants::ROLE_ADMIN]
 
@@ -175,7 +175,7 @@ class UserController extends Controller
         Passwords::deleteAll(['user_id' => $id]);
         $model = OrganizationUser::findOne($id);
         $model->delete();
-        \Yii::$app->session->setFlash('success', "Успешно удалена организация");
+        \Yii::$app->session->setFlash('danger', 'Организация удалена!');
         return $this->redirect(['view', 'id' => $model->user_id]);
     }
 
@@ -216,7 +216,7 @@ class UserController extends Controller
         OrganizationUser::deleteAll(['user_id' => $id]);
         Passwords::deleteAll(['user_id' => $id]);
         $this->findModel($id)->delete();
-
+        \Yii::$app->session->setFlash('danger', 'Пользователь удалена!');
         return $this->redirect(['index']);
     }
 

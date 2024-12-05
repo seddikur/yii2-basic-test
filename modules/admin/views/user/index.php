@@ -18,19 +18,19 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
 
     <?php
     //    d(Yii::$app->user);
     //$userId = Yii::$app->user->id; //id текущего пользователя
     //$userRole = Yii::$app->authManager->getRole('admin');
     //Yii::$app->authManager->assign($userRole, $userId);
-//    $user_to_login = Users::findOne(Yii::$app->user->id);
-//        \yii\helpers\VarDumper::dump( $user_to_login->isAdmin(), 10, true);
-     if ( \Yii::$app->authManager->getAssignment('admin', Yii::$app->user->id)): ?>
+    //    $user_to_login = Users::findOne(Yii::$app->user->id);
+    //        \yii\helpers\VarDumper::dump( $user_to_login->isAdmin(), 10, true);
+    if (\Yii::$app->authManager->getAssignment('admin', Yii::$app->user->id)): ?>
 
         <p>
-            <?php echo Html::a('Новый', ['create'], ['class' => 'btn btn-success']) ?>
+            <?php echo Html::a('Добавить пользователя', ['create'], ['class' => 'btn btn-outline-success']) ?>
         </p>
     <?php endif; ?>
 
@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'attribute' => 'status',
                 'value' => function ($data) {
+                    /** @var $data Users */
                     return $data->getStatusName();
                 },
             ],
@@ -66,8 +67,8 @@ $this->params['breadcrumbs'][] = $this->title;
 //            ],
             'created_at:date',
             [
-                'class' => 'yii\grid\ActionColumn',
-//                'template' => '{view}&nbsp;&nbsp;{permit}&nbsp;&nbsp;{delete}',
+                'class' => \app\components\classes\CustomActionColumnClass::class,
+                'headerOptions' => ['style' => 'width:10%'],
                 'template' => '{login} {view} {update}  {delete}',
 //                'urlCreator' => function ($action, $model) {
 //                    if ($action === 'view') {
@@ -81,9 +82,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => 'Change user role'
                         ]);
                     },
-                    'login' => function ($url,$model, $key) {
+                    'login' => function ($url, $model, $key) {
                         $url = 'login_as_user?id=' . $model->id;
-                        return Html::a('<i class="bi bi-box-arrow-in-right "></i>',$url);
+                        return Html::a('<i class="bi bi-box-arrow-in-right "></i>', $url);
                     },
                 ],
                 'visibleButtons' => [

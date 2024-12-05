@@ -52,7 +52,8 @@ use app\models\extend\UserExtend;
         </div>
         <?php endif;?>
         <div class="form-group">
-            <?= \app\widgets\grid\Submit::widget() ?>
+            <?php // \app\widgets\grid\Submit::widget() ?>
+            <?= $this->render('@buttons/_submitButtonsStandard', ['model' => $model]) ?>
         </div>
     </div>
 

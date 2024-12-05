@@ -41,6 +41,7 @@ class DefaultController extends Controller
      */
     public function actionAjaxSearch()
     {
+
         return $this->render('ajax-search');
     }
 

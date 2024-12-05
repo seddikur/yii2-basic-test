@@ -45,7 +45,7 @@ class Organizations extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Название',
+            'title' => 'Название организации',
             'description' => 'Описание',
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата изменения',

@@ -28,7 +28,6 @@ class m241022_084833_seed_projects_table extends Migration
                         'status' =>  rand(0, 4),
                     ]
                 );
-
             }
         }
     }

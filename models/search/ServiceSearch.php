@@ -4,12 +4,12 @@ namespace app\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Passwords;
+use app\models\Service;
 
 /**
- * PasswordsSearch represents the model behind the search form of `app\models\Passwords`.
+ * ServiceSearch represents the model behind the search form of `app\models\Service`.
  */
-class PasswordsSearch extends Passwords
+class ServiceSearch extends Service
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class PasswordsSearch extends Passwords
     public function rules()
     {
         return [
-            [['id', 'organization_id', 'created_at', 'updated_at', 'service_id'], 'integer'],
-            [['sault', 'password', 'hash', 'ip'], 'safe'],
+            [['id'], 'integer'],
+            [['title'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class PasswordsSearch extends Passwords
      */
     public function search($params)
     {
-        $query = Passwords::find();
+        $query = Service::find();
 
         // add conditions that should always apply here
 
@@ -59,16 +59,9 @@ class PasswordsSearch extends Passwords
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'organization_id' => $this->organization_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'service_id' => $this->service_id,
         ]);
 
-        $query->andFilterWhere(['like', 'sault', $this->sault])
-            ->andFilterWhere(['like', 'password', $this->password])
-            ->andFilterWhere(['like', 'hash', $this->hash])
-            ->andFilterWhere(['like', 'ip', $this->ip]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }

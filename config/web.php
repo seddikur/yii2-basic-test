@@ -14,6 +14,7 @@ $config = [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+        '@buttons'   => '@app/buttons',
     ],
     // перевести сайт в режим обслуживания
 //    'catchAll' => ['site/offline'],

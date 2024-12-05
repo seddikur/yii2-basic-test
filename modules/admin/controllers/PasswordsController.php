@@ -3,11 +3,16 @@
 namespace app\modules\admin\controllers;
 
 use app\models\Constants;
+use app\models\GroupPassword;
+use app\models\Groups;
 use app\models\Passwords;
 use app\models\search\PasswordsSearch;
+use app\models\Service;
 use app\modules\admin\Admin;
 use app\modules\profile\services\UserProfileRepository;
+use yii\db\Query;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -46,7 +51,7 @@ class PasswordsController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index', 'view', 'update', 'create', 'view-password'],
+                            'actions' => ['index', 'view', 'update', 'create', 'view-password', 'delete'],
                             'allow' => true,
 //                            'roles' => [Constants::ROLE_ADMIN]
 
@@ -85,6 +90,7 @@ class PasswordsController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+
         ]);
     }
 
@@ -125,8 +131,10 @@ class PasswordsController extends Controller
     public function actionCreate()
     {
         $model = new Passwords();
+
 //        VarDumper::dump($this->passwordEncryption->decryptingPassword(), 10,true);
 //        VarDumper::dump($this->passwordEncryption->reverseEncryption(), 10,true);
+
 
         if ($this->request->isPost) {
             $model->sault = \Yii::$app->user->identity->auth_key;
@@ -134,6 +142,18 @@ class PasswordsController extends Controller
             $model->hash = bin2hex($this->passwordEncryption->randomPseudoBytes());
 
             if ($model->load($this->request->post()) && $model->save()) {
+
+
+                //записываем группы
+                $values = [];
+                foreach ($model->group_id as $group_id){
+                    $values[] = [$model->id, $group_id];
+                }
+//                \Yii::$app->db->createCommand()->batchInsert(GroupPassword::tableName(), ['password_id', 'group_id'], $values)->execute();
+                if (! empty($values)) $model->getDb()->createCommand()->batchInsert(GroupPassword::tableName(), ['password_id', 'group_id'], $values)->execute();
+
+
+                \Yii::$app->session->setFlash('success', 'Пароль успешно добавлен!');
                 return $this->redirect(['index']);
             }
             if (!$model->save()) {
@@ -146,8 +166,32 @@ class PasswordsController extends Controller
             $model->loadDefaultValues();
         }
 
+
+//        \Yii::$app->response->format = 'json';
+//        $json = new \stdClass();
+//        $query = new Query();
+//        $query->select([
+//            'id' => 'id',
+//            'text' => 'name'
+//        ]);
+//        $query->from(Groups::tableName());
+//
+//        if ($search = \Yii::$app->request->post('search', '')) {
+//            $query->where(['like', 'title', $search]);
+//        }
+//        $query->orderBy([
+//            'name' => SORT_ASC
+//        ]);
+//        if ($itemsId = \Yii::$app->request->post('itemsId', [])) {
+//            $query->andWhere(['not in', 'id', $itemsId]);
+//        }
+//        $query->limit(20);
+//        $command = $query->createCommand();
+//        $data = $command->queryAll();
+
         return $this->render('create', [
             'model' => $model,
+            'groups' =>  \yii\helpers\ArrayHelper::map( \app\models\Groups::find()->asArray()->all(), 'id', 'title'),
         ]);
     }
 
@@ -161,13 +205,28 @@ class PasswordsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $groupArray = GroupPassword::findAll(['password_id' => $id]);
+        $model->group_id =ArrayHelper::getColumn($groupArray, 'group_id',);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+        if ($model->load($this->request->post()) && $model->save()) {
+            GroupPassword::deleteAll(['password_id' => $id]);
+            $values = [];
+            foreach ($model->group_id as $group_id) {
+                $values[] = [$model->id, $group_id];
+            }
+            //записываем массив в таблицу GroupPassword
+//            \Yii::$app->db->createCommand()->batchInsert(GroupPassword::tableName(), ['password_id', 'group_id'], $values)->execute();
+            if (! empty($values)) $model->getDb()->createCommand()->batchInsert(GroupPassword::tableName(), ['password_id', 'group_id'], $values)->execute();
+
+                \Yii::$app->session->setFlash('success', 'Пароль успешно изменен!');
+                return $this->redirect(['index']);
+
+            }
+
 
         return $this->render('update', [
             'model' => $model,
+            'groups' =>  \yii\helpers\ArrayHelper::map( \app\models\Groups::find()->asArray()->all(), 'id', 'title'),
         ]);
     }
 
@@ -180,8 +239,9 @@ class PasswordsController extends Controller
      */
     public function actionDelete($id)
     {
+        GroupPassword::deleteAll(['password_id' => $id]);
         $this->findModel($id)->delete();
-
+        \Yii::$app->session->setFlash('danger', 'Пароль удален!');
         return $this->redirect(['index']);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 
 $this->title = 'Поиск пароля по hash';
@@ -6,12 +7,16 @@ $this->title = 'Поиск пароля по hash';
 ?>
 
 
-<div class="admin-default-index">
-    <?php
-    // поле поиска по hash
-    echo $this->render('search'); ?>
-</div>
-<!--5474dc4f409dfda4f6d6c099a028fc8e-->
+    <div class="row">
+    <div class="col col-lg-4">
+        <div class="admin-default-index">
+            <?php
+            // поле поиска по hash
+            echo $this->render('search'); ?>
+        </div>
+    </div
+    </div
+            <!--5474dc4f409dfda4f6d6c099a028fc8e-->
 <?php
 $js = <<<JS
 

@@ -15,6 +15,7 @@ use yii\grid\ActionColumn;
 class CustomActionColumnClass extends ActionColumn
 {
 
+    public $header = 'Действия';
     public $icons = [
         'eye-open' => '<i class="bi bi-eye text-success"></i>',
         'pencil' => '<i class="bi bi-pencil text-warning"></i>',

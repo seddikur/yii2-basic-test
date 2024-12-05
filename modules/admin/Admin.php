@@ -19,6 +19,7 @@ class Admin extends \yii\base\Module
     public function init()
     {
         $this->layout = 'main';
+//        \Yii::setAlias('@buttons', dirname(dirname(__DIR__)) . '/buttons');
 //        $this->layout = "@app/views/layouts/main";
         parent::init();
 

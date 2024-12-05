@@ -26,10 +26,9 @@ class Constants
     const ACCESS_GUEST = 2;     // гостям
     const ACCESS_USER = 3;      // авторизованным пользователям
 
-    // Статусы I18n
-    const STATUS_I18N_ALL = 1;      // переводить все
-    const STATUS_I18N_NAMES = 2;    // переводить только названия полей
-    const STATUS_I18N_BLOCKED = 6;  // запретить перевод
+    // Статусы групп
+    const STATUS_GROUP_BLOCKED = 2;      // заблокирован
+    const STATUS_GROUP_ACTIVE = 1;    // активен
 
     // Пол пользователя
     const SEX_FEMALE    = 1;

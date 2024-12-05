@@ -46,6 +46,9 @@ class OrganizationsSearch extends Organizations
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+//            'pagination' => [
+//                'defaultPageSize' => 2, //set page size here
+//            ]
         ]);
 
         $this->load($params);

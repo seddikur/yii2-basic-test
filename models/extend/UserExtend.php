@@ -9,6 +9,7 @@
 namespace app\models\extend;
 
 use app\models\Constants;
+use app\models\GroupUser;
 use app\models\Users;
 use Yii;
 use yii\base\NotSupportedException;
@@ -193,6 +194,33 @@ class UserExtend extends Users implements IdentityInterface
         ];
     }
 
+    /**
+     * Название групп
+     * @return string
+     */
+    public function getGroupName()
+    {
+        $group = GroupUser::findOne(['user_id' => $this->id]);
+        if (!empty($group->group)) {
+            return '<span class="badge text-bg-secondary">' . $group->group->title . '</span>';
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Id групп пользователя
+     * @return string
+     */
+    public function getGroupId()
+    {
+        $group = GroupUser::findOne(['user_id' => $this->id]);
+        if (!empty($group->group)) {
+            return $group->group->id ;
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Гендерный список

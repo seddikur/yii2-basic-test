@@ -85,7 +85,7 @@ function btnSearchClick2() {
 					}
 				},
 				 error: function(){
-                alert('Error!');
+                alert('Нет совпадений!');
             }
 			});
 		 } else {

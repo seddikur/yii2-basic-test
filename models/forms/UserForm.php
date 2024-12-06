@@ -19,13 +19,16 @@ class UserForm extends UserExtend
     public $password;
     public $password_confirm;
 
+    /** @var string Группа */
+    public $group_id;
+
 //    public $role;
     public $permission;
 
     public function rules()
     {
         $items = UserExtend::rules();
-        $items[] = [['email',], 'required'];
+        $items[] = [['email', 'group_id'], 'required'];
         $items[] = [['password', 'password_confirm'], 'required', 'on' => 'create-user'];
         $items[] = [['password', 'password_confirm'], 'string'];
         $items[] = ['password_confirm', 'compare', 'compareAttribute' => 'password'];
@@ -39,6 +42,7 @@ class UserForm extends UserExtend
         $items['username'] ='Логин';
         $items['password'] = 'Пароль';
         $items['password_confirm'] =  'Подтверждение пароля';
+        $items['group_id'] =  'Группа пользователей';
 
         return $items;
     }

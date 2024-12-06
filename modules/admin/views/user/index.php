@@ -27,8 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
     //Yii::$app->authManager->assign($userRole, $userId);
     //    $user_to_login = Users::findOne(Yii::$app->user->id);
     //        \yii\helpers\VarDumper::dump( $user_to_login->isAdmin(), 10, true);
+//    \yii\helpers\VarDumper::dump((\Yii::$app->authManager->getAssignment('admin', Yii::$app->user->id)));
     if (\Yii::$app->authManager->getAssignment('admin', Yii::$app->user->id)): ?>
-
         <p>
             <?php echo Html::a('Добавить пользователя', ['create'], ['class' => 'btn btn-outline-success']) ?>
         </p>
@@ -39,7 +39,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'username',
             'last_name',
             'first_name',
@@ -51,6 +50,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) {
                     /** @var $data Users */
                     return $data->getStatusName();
+                },
+            ],
+            [
+                'format' => 'raw',
+                'attribute' => 'group_id',
+                'value' => function ($data) {
+                    /** @var $data Users */
+                    return $data->getGroupName();
                 },
             ],
 //            'updated_at:date',

@@ -22,6 +22,9 @@ class PasswordEncryption
 
     public $cipher = "AES-128-CBC";
 
+    public $constant_name = 'ENCRYPTION_KEY';
+    public $value = 'ab86d144e3f080b61c7c2e43';
+
     /** @var false|int Получает длину инициализирующего вектора шифра */
     public $ivlen;
 
@@ -29,21 +32,18 @@ class PasswordEncryption
     {
         $this->ivlen = $this->cipherIvLength();
     }
+
     /**
      * Дешифрование пароля
      * @param $password
      * @return string
      */
     public function decryptingPassword($password)
-//    public function decryptingPassword()
-    {
-//        $password = 'мойПарольСуперСложный__88';
-//        $password = 'secret';
-        define('ENCRYPTION_KEY', 'ab86d144e3f080b61c7c2e43');
 
+    {
+        define($this->constant_name, $this->value);
 
 //        // Получает длину инициализирующего вектора шифра
-//        $ivlen = $this->cipherIvLength();
         $ivlen = $this->ivlen;
 
 //        // Генерирует псевдослучайную последовательность байт
@@ -51,7 +51,7 @@ class PasswordEncryption
 
         // Шифрует данные
         $ciphertext_raw = openssl_encrypt($password, $this->cipher, ENCRYPTION_KEY, $options = OPENSSL_RAW_DATA, $iv);
-//        VarDumper::dump(bin2hex($iv), 10, true);
+
         // Генерирует хеш-код на основе ключа через метод HMAC
         $hmac = hash_hmac('sha256', $ciphertext_raw, ENCRYPTION_KEY, $as_binary = true);
         $cipherPassword = base64_encode($iv . $hmac . $ciphertext_raw);
@@ -68,11 +68,10 @@ class PasswordEncryption
     public function reverseEncryption($cipherPassword)
     {
 
-//        $cipherPassword = 'BxeF6lyC+ysxMXFHP4fn/fr2yzvmqQfk2WPcu/z4ryfZjZRGmkzAeqqcnnA80pItx8xEFtS03WqpJlZ8LV+99L60kO7SrnmpbyRjboQb7xiCUqrWzyIofMHUm5zDOQC/';
-        define('ENCRYPTION_KEY', 'ab86d144e3f080b61c7c2e43');
+        define($this->constant_name, $this->value);
         $c = base64_decode($cipherPassword);
         //Получает длину инициализирующего вектора шифра
-        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $ivlen = $this->cipherIvLength();
 
         //Возвращает подстроку
         $iv = substr($c, 0, $ivlen);
@@ -81,7 +80,7 @@ class PasswordEncryption
 
         $ciphertext_raw = substr($c, $ivlen + $sha2len);
         // Расшифровывает данные
-        $decryptPassword = openssl_decrypt($ciphertext_raw, $cipher, ENCRYPTION_KEY, $options = OPENSSL_RAW_DATA, $iv);
+        $decryptPassword = openssl_decrypt($ciphertext_raw, $this->cipher, ENCRYPTION_KEY, $options = OPENSSL_RAW_DATA, $iv);
         $calcmac = hash_hmac('sha256', $ciphertext_raw, ENCRYPTION_KEY, $as_binary = true);
 //        if (hash_equals($hmac, $calcmac)) {
 //            echo 'пароль';

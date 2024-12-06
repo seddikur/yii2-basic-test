@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\helpers\ArrayHelper;
 use app\models\extend\UserExtend;
+use kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var UserExtend $model */
@@ -23,6 +24,15 @@ use app\models\extend\UserExtend;
                     <?= $form->field($model, 'last_name')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'patronymic')->textInput(['maxlength' => true]) ?>
+                    <?php
+                    echo $form->field($model, 'group_id')->widget(Select2::class, [
+                        'data' => \yii\helpers\ArrayHelper::map(\app\models\Groups::find()->asArray()->all(), 'id', 'title'),
+                        'language' => 'ru',
+                        'options' => ['placeholder' => 'Выбери  ...'],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]); ?>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@
 namespace app\modules\admin\controllers;
 
 use app\models\Passwords;
+use app\models\Users;
 use app\modules\admin\Admin;
 use app\modules\admin\services\PasswordEncryption;
 use yii\web\Controller;

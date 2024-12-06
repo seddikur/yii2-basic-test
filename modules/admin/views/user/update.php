@@ -9,7 +9,7 @@ use yii\helpers\VarDumper;
 $this->title = $model->first_name;
 $this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
 //$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Правка';
+$this->params['breadcrumbs'][] = 'Редактирование пользователя';
 ?>
 <div class="user-entity-update">
 

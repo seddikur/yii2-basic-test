@@ -1,5 +1,6 @@
 <?php
 
+use app\models\GroupUser;
 use common\models\AdsCampaign;
 use yii\bootstrap4\Html;
 use yii\helpers\Url;
@@ -23,48 +24,49 @@ use yii\helpers\Url;
 <?php
 
 if (!empty(Yii::$app->request->post('search'))) {
-
     $search = Yii::$app->request->post('search');
+//    $password= \app\models\Passwords::find()
+//        ->where(['hash' => $search])
+//        ->asArray()
+//        ->one();
+    $password = \app\models\Passwords::findOne(['hash' => $search]);
+    $user_group = GroupUser::findOne(['user_id' => \Yii::$app->user->id]);
+    $password_group = \app\models\GroupPassword::findOne(['password_id' => $password->id]);
+
 //    $search = mb_eregi_replace("[^a-zа-яё0-9 ]", '', $search);
     $search = trim($search);
     if (Yii::$app->user->identity->isAdmin()) {
-        $result = \app\models\Passwords::find()
-            ->where(['hash' => $search])
-            ->asArray()
-            ->all();
+        $result = $password;
     } else {
-        $result = \app\models\Passwords::find()
-            ->where(['hash' => $search])
-            ->andWhere(['user_id' => Yii::$app->user->identity->id])
-            ->asArray()
-            ->all();
+        if($user_group->group_id==$password_group->group_id){
+        $result = $password;
+        }else{
+            $result = null;
+        }
+
     }
 
 
-    if ($result) {
-        ?>
+    if ($result) { ?>
 
         <div class="search_result">
             <table>
-                <?php foreach ($result as $row): ?>
+                <tr>
+                    <td class="search_result-name">
+                        <?= $result['hash']; ?>
+                    </td>
+                    <td>
 
-                    <tr>
-                        <td class="search_result-name">
-                            <?= $row['hash']; ?>
-                        </td>
-                        <td>
-
-                        </td>
-                        <td class="search_result-btn">
-                            <?= Html::button('Показать', [
-                                'value' => Url::to(['view-password', 'id' => $row['id']]),
-                                'id' => 'btn-view-pass',
-                                'class' => 'btn btn-info',
-                                'data-pjax' => '0',
-                            ]); ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                    </td>
+                    <td class="search_result-btn">
+                        <?= Html::button('Показать', [
+                            'value' => Url::to(['view-password', 'id' => $result['id']]),
+                            'id' => 'btn-view-pass',
+                            'class' => 'btn btn-info',
+                            'data-pjax' => '0',
+                        ]); ?>
+                    </td>
+                </tr>
             </table>
         </div>
 
@@ -73,7 +75,8 @@ if (!empty(Yii::$app->request->post('search'))) {
     } else {
         ?>
         <td class="search_result-name">
-            Нет результатов
+
+            <?php   \Yii::$app->session->setFlash('danger', 'Нет доступа к паролю');?>
         </td>
         <?php
 

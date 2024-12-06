@@ -14,6 +14,64 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- Дамп структуры для таблица yii.groups
+CREATE TABLE IF NOT EXISTS `groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Название',
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Описание',
+  `status` smallint(6) NOT NULL DEFAULT '10' COMMENT 'Статус',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Группы пользователей';
+
+-- Дамп данных таблицы yii.groups: ~5 rows (приблизительно)
+INSERT INTO `groups` (`id`, `title`, `description`, `status`) VALUES
+	(1, 'Группа 1', 'Velit aspernatur quod dolorem. Quia distinctio sint voluptas deleniti odio necessitatibus. Aliquid hic ipsum quia et nemo.', 2),
+	(2, 'Группа 2', 'Aliquam natus illo veniam et nam. Architecto dolores eum possimus totam.', 2),
+	(3, 'Группа 3', 'Iusto sed nobis quisquam cupiditate quos eos quis. Aspernatur voluptatum perspiciatis consequatur ea et eligendi velit et. Ullam et doloribus et laborum.', 1),
+	(4, 'Группа 4', 'Dolores sit aspernatur sunt non. Qui odit odit sunt quod eligendi rerum quae. Explicabo vel sunt officia non et consequatur laborum.', 1);
+
+-- Дамп структуры для таблица yii.group_password
+CREATE TABLE IF NOT EXISTS `group_password` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `password_id` int(11) NOT NULL COMMENT 'Пароль',
+  `group_id` int(11) NOT NULL COMMENT 'Группа',
+  PRIMARY KEY (`id`),
+  KEY `password_id` (`password_id`),
+  KEY `group_id` (`group_id`),
+  CONSTRAINT `fk_group_password_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_group_password_password_id` FOREIGN KEY (`password_id`) REFERENCES `passwords` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Группы-пароли';
+
+-- Дамп данных таблицы yii.group_password: ~8 rows (приблизительно)
+INSERT INTO `group_password` (`id`, `password_id`, `group_id`) VALUES
+	(1, 1, 2),
+	(2, 1, 3),
+	(3, 2, 3),
+	(4, 2, 4),
+	(9, 3, 1),
+	(10, 3, 2),
+	(11, 3, 3),
+	(12, 3, 4);
+
+-- Дамп структуры для таблица yii.group_user
+CREATE TABLE IF NOT EXISTS `group_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT 'Пользователь',
+  `group_id` int(11) NOT NULL COMMENT 'Группа',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `group_id` (`group_id`),
+  CONSTRAINT `fk_group_user_group_id` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`),
+  CONSTRAINT `fk_group_user_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Группы-пользователи';
+
+-- Дамп данных таблицы yii.group_user: ~4 rows (приблизительно)
+INSERT INTO `group_user` (`id`, `user_id`, `group_id`) VALUES
+	(1, 2, 1),
+	(2, 3, 4),
+	(3, 1, 3),
+	(5, 4, 1);
+
 -- Дамп структуры для таблица yii.migration
 CREATE TABLE IF NOT EXISTS `migration` (
   `version` varchar(180) NOT NULL,
@@ -21,19 +79,25 @@ CREATE TABLE IF NOT EXISTS `migration` (
   PRIMARY KEY (`version`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Дамп данных таблицы yii.migration: ~9 rows (приблизительно)
+-- Дамп данных таблицы yii.migration: ~17 rows (приблизительно)
 INSERT INTO `migration` (`version`, `apply_time`) VALUES
-	('m000000_000000_base', 1729581787),
-	('m241022_065421_create_table_users', 1732627193),
-	('m241022_070932_seed_user', 1732627195),
-	('m241022_082101_create_table_projects', 1732627195),
-	('m241022_084833_seed_projects_table', 1732627196),
-	('m241123_125706_add_users_role_field', 1732627196),
-	('m241124_113935_add_users_ip_field', 1732627196),
-	('m241124_141539_create_table_organizations', 1732627196),
-	('m241124_141936_create_table_organization_user', 1732627196),
-	('m241124_142842_create_seed_organizations', 1732627196),
-	('m241126_142909_add_users_avatar_field', 1732631764);
+	('m000000_000000_base', 1733387806),
+	('m241022_065421_create_table_users', 1733401581),
+	('m241022_070932_seed_user', 1733401583),
+	('m241022_082101_create_table_projects', 1733401583),
+	('m241022_084833_seed_projects_table', 1733401584),
+	('m241123_125706_add_users_role_field', 1733401584),
+	('m241124_113935_add_users_ip_field', 1733401584),
+	('m241124_141539_create_table_organizations', 1733401584),
+	('m241124_141936_create_table_organization_user', 1733401584),
+	('m241124_142842_create_seed_organizations', 1733401584),
+	('m241126_142909_add_users_avatar_field', 1733401585),
+	('m241127_115533_create_table_password', 1733401585),
+	('m241203_134038_create_table_service', 1733401585),
+	('m241205_081052_create_table_user_group', 1733401585),
+	('m241205_081723_create_table_password_group', 1733401586),
+	('m241205_121357_add_password_service_field', 1733401586),
+	('m241206_070444_create_table_group_user', 1733468913);
 
 -- Дамп структуры для таблица yii.organizations
 CREATE TABLE IF NOT EXISTS `organizations` (
@@ -47,16 +111,16 @@ CREATE TABLE IF NOT EXISTS `organizations` (
 
 -- Дамп данных таблицы yii.organizations: ~10 rows (приблизительно)
 INSERT INTO `organizations` (`id`, `title`, `description`, `created_at`, `updated_at`) VALUES
-	(1, 'ОАО ГазБашкирЖелДорПроф', 'Voluptatibus quibusdam exercitationem optio quaerat dolores. Voluptas officia nobis et similique. Et culpa qui magni et. Facere fugiat in ipsum ipsam voluptate.', 1732627196, NULL),
-	(2, 'МКК Мобайл', 'Distinctio fuga magni quod est sunt. Aliquid repellat dicta dolore dolor. Dolore quia eos maiores aut provident hic. Non deserunt quidem reiciendis iure et non.', 1732627196, NULL),
-	(3, 'МКК CибБухСтрой', 'Et dicta repudiandae omnis sed eveniet ea id repellat. Ut consequatur non vel consequatur ut. Et excepturi soluta explicabo reiciendis doloremque maxime.', 1732627196, NULL),
-	(4, 'ЗАО МикроСантехБухЛизинг', 'Sed deleniti excepturi rerum sunt qui. Laboriosam tempore rerum quod impedit qui. Ut architecto deserunt aspernatur hic consequatur. Et similique sit alias.', 1732627196, NULL),
-	(5, 'МКК Нефть', 'Quis accusantium repudiandae voluptatem ratione odit dolorem. Rerum quod itaque dolores porro est qui fugit.', 1732627196, NULL),
-	(6, 'ЗАО ГорВод', 'Maiores et eaque qui. In eos itaque laudantium perspiciatis cum incidunt quia. Fugiat officiis et odio atque dicta est est.', 1732627196, NULL),
-	(7, 'ЗАО ГлавГлавРыбЭкспедиция', 'Voluptatem sunt beatae provident atque eveniet. Eaque non tempora pariatur. Quis est maiores repellat tempore.', 1732627196, NULL),
-	(8, 'МФО УралITРосКомплекс', 'Eos eos rerum voluptatem. In a libero sed quisquam. Maxime quidem est qui eius consectetur non.', 1732627196, NULL),
-	(9, 'ООО Компания РечСофтЭлектроКомплекс', 'Odit similique et cumque quam. Aut voluptate repellat omnis rerum.', 1732627196, NULL),
-	(10, 'МФО РыбТранс', 'Ut dolorem ut repellat hic dignissimos facilis rerum. Ad et facilis aut sit deleniti. Itaque suscipit hic dolorum at unde.', 1732627196, NULL);
+	(1, 'ЗАО Хоз', 'Est eum nobis quis. Ratione facilis numquam ipsa ab accusamus. Et quam totam dolores voluptates ut ipsum.', 1733401584, NULL),
+	(2, 'ЗАО ТрансТрансЭлектро-H', 'Nemo ducimus voluptatibus incidunt dignissimos atque et blanditiis. Amet placeat eum consequatur maiores minus at.', 1733401584, NULL),
+	(3, 'ЗАО РадиоБашкирТомск', 'Quidem aliquid quae maiores saepe et voluptas nam vero. Expedita aut quia fugit quis suscipit inventore. Aut perspiciatis ut dolor voluptates.', 1733401584, NULL),
+	(4, 'МФО ФлотСтройСервис', 'Et sit sint qui at veritatis. Perspiciatis quaerat culpa quia perspiciatis. Et possimus omnis beatae nostrum non error quas.', 1733401584, NULL),
+	(5, 'ОАО ТекстильРосУрал', 'Nesciunt laudantium sit eos minus. Quia est occaecati atque sed debitis.', 1733401584, NULL),
+	(6, 'ЗАО Монтаж', 'Corrupti animi ex consectetur quisquam quo nam. Dolorum et tenetur velit sed ab ullam distinctio.', 1733401584, NULL),
+	(7, 'МКК Хмель', 'Veritatis iusto dolorem nisi. Optio inventore perspiciatis molestiae vel provident. Omnis distinctio nam quia deleniti.', 1733401584, NULL),
+	(8, 'ОАО ЦементМясТекстильТрест', 'Quaerat omnis ut omnis mollitia. Perspiciatis dolore voluptatem excepturi quas sapiente quo molestiae. Qui suscipit vitae aut aut qui.', 1733401584, NULL),
+	(9, 'ОАО ГазЮпитерРыбСбыт', 'Cum vitae et quia labore beatae perspiciatis dolores. Vel qui ipsum aut facilis aut. Odit officiis quas et excepturi dicta quisquam totam.', 1733401584, NULL),
+	(10, 'ОАО ФинансIT', 'Autem explicabo eum culpa blanditiis. Deleniti sint molestiae et perspiciatis. Voluptatem ratione vitae ab.', 1733401584, NULL);
 
 -- Дамп структуры для таблица yii.organization_user
 CREATE TABLE IF NOT EXISTS `organization_user` (
@@ -71,6 +135,30 @@ CREATE TABLE IF NOT EXISTS `organization_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Организации-Пользователь';
 
 -- Дамп данных таблицы yii.organization_user: ~0 rows (приблизительно)
+
+-- Дамп структуры для таблица yii.passwords
+CREATE TABLE IF NOT EXISTS `passwords` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sault` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Создан',
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'password',
+  `hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'hash',
+  `organization_id` int(11) NOT NULL COMMENT 'ID организации',
+  `created_at` int(11) DEFAULT NULL COMMENT 'Создан',
+  `updated_at` int(11) DEFAULT NULL COMMENT 'Изменен',
+  `ip` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Ip',
+  `service_id` int(11) DEFAULT NULL COMMENT 'Сервис',
+  PRIMARY KEY (`id`),
+  KEY `organization_id` (`organization_id`),
+  KEY `service_id` (`service_id`),
+  CONSTRAINT `fk_passwords_organization_id` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`),
+  CONSTRAINT `fk_passwords_service_id` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Пароли';
+
+-- Дамп данных таблицы yii.passwords: ~3 rows (приблизительно)
+INSERT INTO `passwords` (`id`, `sault`, `password`, `hash`, `organization_id`, `created_at`, `updated_at`, `ip`, `service_id`) VALUES
+	(1, 'B2-UvsmbVgPPowPP6Q-vdLFUiWloMLqo', '93pKaFrLpMC3bgKlCJ0Ykh3pxK9yc87B31ulnfHOkQ2cu8+E5U62J4sYvsyOvzXPIp+iYkTOPIMmQXE+Evc2oQ==', '85d3f91d128176b8aa85720ed786eb12', 2, 1733401940, 1733401940, NULL, 3),
+	(2, 'B2-UvsmbVgPPowPP6Q-vdLFUiWloMLqo', '3WFw6udO3gotSQ4ZmGUWa6kyjXjKTlSCZpGvxAzsiPVdIZjyEGpICYA07Y4f5dWyVmfCl9P5riHDnKarfnYZ7w==', '954213986835f7c187bf6a98af057a5c', 4, 1733401969, 1733401969, NULL, 4),
+	(3, 'B2-UvsmbVgPPowPP6Q-vdLFUiWloMLqo', '2AtRFebL0GY2f8eQispYZ10rQXVJ/BEniTyk3rv9wrVzWcUdEF+6lHcUdLPS1c++ColdwtCMYu9Cd8aBUiJEIw==', '34e0f90c5f4c9805344127a43feb3025', 2, 1733401995, 1733402011, NULL, 5);
 
 -- Дамп структуры для таблица yii.projects
 CREATE TABLE IF NOT EXISTS `projects` (
@@ -89,56 +177,72 @@ CREATE TABLE IF NOT EXISTS `projects` (
 
 -- Дамп данных таблицы yii.projects: ~50 rows (приблизительно)
 INSERT INTO `projects` (`id`, `title`, `description`, `price`, `created_at`, `data_result`, `user_id`, `status`) VALUES
-	(1, 'Front-line well-modulated definition', 'Minus eos eum et autem quod eveniet tenetur. Id soluta adipisci optio repellat et sed. Deserunt tenetur quasi sunt quaerat nam voluptas voluptate.', 62400, 1732627195, 1732627195, 1, 4),
-	(2, 'Re-engineered heuristic GraphicInterface', 'Ad quo nisi rem sit neque. Commodi facere hic quae ullam ipsa. Voluptatibus sit vel magni id harum.', 88592, 1732627195, 1732627195, 1, 2),
-	(3, 'Adaptive fault-tolerant service-desk', 'Vero quaerat suscipit voluptatum culpa quia aliquid rerum. Illum quod quidem sapiente perspiciatis in quis. Blanditiis eaque est hic eos et. Et nam aut excepturi excepturi.', 47486, 1732627195, 1732627195, 1, 4),
-	(4, 'Persistent modular toolset', 'Quod vitae reiciendis ut voluptas. Commodi a voluptas occaecati enim quam harum. Tempore est fuga aspernatur rerum illo.', 41491, 1732627195, 1732627195, 1, 2),
-	(5, 'Public-key user-facing standardization', 'Consequatur ducimus itaque et fuga earum in. Id nesciunt non laboriosam doloremque quia minus. Et minus quas facilis qui et eos.', 30577, 1732627195, 1732627195, 1, 1),
-	(6, 'Re-engineered empowering processimprovement', 'Dolorem id nihil optio non quas facere et. Distinctio aut totam minus. Aut perspiciatis qui iure.', 86769, 1732627195, 1732627195, 1, 2),
-	(7, 'Multi-channelled motivating leverage', 'Rem cum doloribus voluptas omnis. Et natus et harum mollitia unde. Placeat qui aut nihil qui.', 36315, 1732627195, 1732627195, 1, 2),
-	(8, 'Networked upward-trending productivity', 'Corrupti aliquid itaque qui occaecati ut modi dolorem. Et ullam sapiente sit qui animi eos atque molestiae.', 81280, 1732627195, 1732627195, 1, 0),
-	(9, 'Total heuristic groupware', 'Est enim laborum nam beatae voluptatibus temporibus facere. Inventore omnis optio dolorem ut.', 52007, 1732627195, 1732627195, 1, 1),
-	(10, 'Stand-alone 5thgeneration blockchain', 'Dolores hic qui vel voluptates fugiat consectetur ipsa et. Omnis maiores dolorem est velit voluptatem.', 51754, 1732627195, 1732627195, 1, 1),
-	(11, 'Programmable transitional model', 'At cum sapiente et qui nihil dolores necessitatibus. Et fugiat quasi unde minima. Aliquid quo suscipit neque earum.', 84324, 1732627195, 1732627195, 1, 4),
-	(12, 'Adaptive stable task-force', 'Voluptas quia dignissimos perspiciatis nisi eum. Placeat magnam molestiae iusto nisi et ipsum porro. Earum voluptas aut est.', 59813, 1732627195, 1732627195, 1, 2),
-	(13, 'Multi-lateral eco-centric toolset', 'Eius recusandae dolores et reiciendis exercitationem. Et quos eaque ut fugit. Recusandae dolorem deleniti ut optio culpa distinctio dolorum. Quam fuga ullam et dolor omnis et debitis.', 89824, 1732627195, 1732627195, 1, 3),
-	(14, 'Public-key multimedia leverage', 'Aut quidem ad sit id delectus facilis. In qui iure quam sed excepturi ab maxime. Rerum quia commodi et enim quod omnis magni neque.', 23026, 1732627195, 1732627195, 1, 1),
-	(15, 'Robust foreground localareanetwork', 'Molestiae incidunt saepe beatae. Molestias voluptas ipsum totam rerum natus maxime beatae aut.', 31188, 1732627195, 1732627195, 1, 2),
-	(16, 'Cross-platform high-level framework', 'Et nihil molestias sint tenetur. Minima possimus harum voluptatem et. Ex saepe qui ducimus et quidem. Unde non ex voluptas iste et.', 52897, 1732627195, 1732627195, 1, 1),
-	(17, 'Profit-focused impactful methodology', 'Sequi sunt molestiae rerum aut. Est est quia officiis sequi et. Perferendis illum voluptatem optio voluptates. Vitae iusto nulla consequuntur occaecati consequatur.', 41138, 1732627195, 1732627195, 1, 2),
-	(18, 'Open-architected well-modulated structure', 'Et est libero quia fugiat qui aut incidunt. Cupiditate aspernatur aut minima et distinctio eius earum.', 33388, 1732627195, 1732627195, 1, 0),
-	(19, 'Function-based empowering forecast', 'Dolorem qui dolor odio sit aperiam. Et sed est neque voluptates sed exercitationem. Debitis non architecto nihil perspiciatis nihil rerum. Et sint odio inventore.', 78478, 1732627195, 1732627195, 1, 3),
-	(20, 'Monitored non-volatile utilisation', 'Alias voluptas saepe omnis. Laborum est ex corrupti culpa nisi velit id itaque.', 59511, 1732627195, 1732627195, 1, 2),
-	(21, 'Focused bifurcated functionalities', 'Et sit quo quia nam vel provident in. Itaque minus maiores iure fugiat ut.', 87120, 1732627195, 1732627195, 1, 0),
-	(22, 'Switchable asynchronous application', 'Eos voluptas sunt voluptatum ut omnis et. Id est accusamus odio. Tempore ipsum doloribus labore pariatur non fugiat. Fugit impedit placeat nihil temporibus.', 76912, 1732627195, 1732627195, 1, 3),
-	(23, 'Ameliorated modular alliance', 'Aut laborum asperiores et harum et. Dolor fugiat et consequatur. Sapiente illo occaecati voluptas. Aliquid aut culpa at aperiam facilis.', 66138, 1732627195, 1732627195, 1, 1),
-	(24, 'Horizontal client-driven flexibility', 'Impedit soluta perspiciatis voluptas ducimus. Quia suscipit eum sequi qui aliquid.', 62891, 1732627195, 1732627195, 1, 0),
-	(25, 'Networked clear-thinking encoding', 'Molestiae eveniet sunt eum fuga architecto. Repellendus eum alias excepturi aut id. Corrupti error sapiente sunt ab.', 29388, 1732627195, 1732627195, 1, 2),
-	(26, 'Implemented intermediate array', 'Distinctio quia voluptatem aut. Blanditiis qui voluptatem et voluptatibus autem.', 89571, 1732627195, 1732627195, 1, 3),
-	(27, 'Visionary foreground info-mediaries', 'Quos odit hic ad et praesentium velit. Magni eos ducimus sint deserunt maiores et.', 45090, 1732627195, 1732627195, 1, 3),
-	(28, 'Re-engineered solution-oriented interface', 'Temporibus hic et ex culpa earum hic et. Eligendi ab in accusamus dolores debitis.', 81186, 1732627195, 1732627195, 1, 3),
-	(29, 'Devolved even-keeled customerloyalty', 'Voluptas nihil quisquam ex assumenda eaque. Odit quaerat sint veniam quisquam quod porro. Eum iusto totam dolorum ratione rerum omnis.', 45859, 1732627195, 1732627195, 1, 4),
-	(30, 'Cross-platform 3rdgeneration algorithm', 'Et dicta adipisci quo dolores cumque. Qui fugit sit distinctio occaecati. Et veniam omnis exercitationem quod nemo fugit eius.', 45631, 1732627195, 1732627195, 1, 3),
-	(31, 'Expanded 24/7 strategy', 'Eum non soluta et. Sint est et nesciunt nihil recusandae et ut. Asperiores magni quia porro suscipit sed id in. Quibusdam officia est est eius totam. Nam eveniet ut laboriosam ratione doloremque.', 74694, 1732627195, 1732627195, 1, 2),
-	(32, 'Switchable full-range contingency', 'Enim esse quae quia molestiae facere enim. Blanditiis eveniet possimus dicta aut nulla. Recusandae rerum optio cum occaecati commodi dolorem. Rem rerum quo consectetur.', 77963, 1732627195, 1732627195, 1, 3),
-	(33, 'Grass-roots homogeneous paradigm', 'Ullam consequatur provident necessitatibus et cupiditate. Nostrum similique a et quia quia. Omnis quod debitis quidem aliquid quia qui expedita.', 73627, 1732627195, 1732627195, 1, 1),
-	(34, 'Public-key coherent firmware', 'Tempore aut cumque laudantium omnis consequatur et. Accusamus sit beatae iste voluptatem illum enim autem. Alias quisquam reiciendis laborum et.', 74878, 1732627195, 1732627195, 1, 4),
-	(35, 'Switchable dynamic service-desk', 'Est dolorum perferendis iusto sunt. Aut quis quis officiis velit quidem eaque. Dolore aliquid sit nemo libero ipsum.', 49408, 1732627195, 1732627195, 1, 0),
-	(36, 'Mandatory multi-tasking openarchitecture', 'Esse vel repellendus omnis modi. Totam eveniet aut praesentium sequi tempora. Inventore alias et est iusto est.', 27081, 1732627195, 1732627195, 1, 3),
-	(37, 'Exclusive uniform hub', 'Rerum voluptatem ut ad sed distinctio qui voluptatibus. Repellendus quo dolor optio vero commodi vel et. Dolores eum odio et sit consequatur.', 35695, 1732627195, 1732627195, 1, 0),
-	(38, 'Diverse client-server GraphicInterface', 'Mollitia ipsa a ut error. Culpa temporibus rerum facere alias.', 54571, 1732627195, 1732627195, 1, 2),
-	(39, 'Synergistic modular internetsolution', 'Repellendus iste quia omnis amet. Tempora in earum dolorum autem et. Dolorum aut dolor maiores itaque recusandae. Enim sint enim sed at ipsam velit quisquam.', 75265, 1732627195, 1732627195, 1, 3),
-	(40, 'Future-proofed zeroadministration info-mediaries', 'Adipisci atque beatae voluptatem. Nulla fuga et repudiandae qui. Atque ipsa facere voluptate vel.', 39950, 1732627195, 1732627195, 1, 2),
-	(41, 'Object-based methodical throughput', 'Dolorum vel delectus consequatur. Ducimus qui eos ab eum. Tempore veritatis similique non saepe autem sint ut. Laborum animi quis voluptate.', 79430, 1732627195, 1732627195, 1, 1),
-	(42, 'Robust zerotolerance artificialintelligence', 'Aperiam aliquam rerum et sint. Autem unde quisquam a voluptatem. Modi ad velit eos et quos error et inventore. Sed consequatur velit eos labore.', 82134, 1732627195, 1732627195, 1, 3),
-	(43, 'Organic client-driven orchestration', 'Vel aperiam voluptatibus vel alias nostrum est rerum. Explicabo perspiciatis quisquam ipsa ut. Tenetur sed voluptatem asperiores quaerat minus non sequi.', 89022, 1732627195, 1732627195, 1, 0),
-	(44, 'Open-source multi-state conglomeration', 'Aut velit harum blanditiis maiores reiciendis est. Nihil dicta sunt nisi molestiae. Enim facilis quam odio numquam.', 23495, 1732627195, 1732627195, 1, 4),
-	(45, 'Operative 24/7 data-warehouse', 'Voluptas impedit dolor enim. Quisquam voluptates est odit magni minus similique rem. Et cum aliquid non a atque. Voluptas explicabo fugiat provident odio et.', 29922, 1732627195, 1732627195, 1, 2),
-	(46, 'Implemented contextually-based customerloyalty', 'Non tenetur dolores voluptatibus ut. Ab dicta natus distinctio saepe velit. Quaerat et aut molestiae accusamus enim.', 75664, 1732627195, 1732627195, 1, 4),
-	(47, 'Vision-oriented bottom-line firmware', 'Rerum fuga ut et qui odio autem. Eius voluptates quia aspernatur quibusdam ea non. Consequatur in labore officia quos culpa minima.', 44992, 1732627195, 1732627195, 1, 2),
-	(48, 'Self-enabling methodical ability', 'Vel deleniti et dolorum quia sit. Ut ut tenetur aut ad pariatur. Voluptas tempore autem velit voluptatem laboriosam.', 52924, 1732627195, 1732627195, 1, 2),
-	(49, 'Organized real-time info-mediaries', 'Ex quaerat aliquid amet expedita sint aut. Autem doloremque ut quas ut corporis.', 43275, 1732627195, 1732627195, 1, 4),
-	(50, 'User-centric stable projection', 'Dolore et facere eos. Nihil optio aut rem quia qui. Aut aut quidem culpa quo.', 70631, 1732627195, 1732627195, 1, 4);
+	(1, 'Team-oriented homogeneous solution', 'Ab doloribus rerum eos a earum. Voluptas enim sed expedita debitis.', 53974, 1733401583, 1733401583, 1, 2),
+	(2, 'Organic impactful ability', 'Sit qui autem explicabo aspernatur totam soluta. Et et error voluptatibus at velit.', 79687, 1733401583, 1733401583, 1, 3),
+	(3, 'Enterprise-wide optimal support', 'Quo consectetur et labore consequuntur odio praesentium. Natus sit quo cum illo voluptate et.', 44216, 1733401583, 1733401583, 1, 2),
+	(4, 'Networked discrete solution', 'Soluta aut quod voluptatem asperiores. Velit et ut ratione rerum sapiente animi sit et.', 63706, 1733401583, 1733401583, 1, 2),
+	(5, 'Grass-roots homogeneous framework', 'Sed dolor dignissimos voluptate voluptate. Corporis optio expedita et explicabo. Sunt suscipit nulla saepe nam.', 88060, 1733401583, 1733401583, 1, 0),
+	(6, 'Re-engineered secondary definition', 'Voluptatum neque reiciendis quo velit nostrum. Et blanditiis labore quos et.', 51200, 1733401583, 1733401583, 1, 3),
+	(7, 'Total holistic collaboration', 'Asperiores et quo eaque dolores officia placeat est quis. Quaerat illum doloremque illum alias. Fugiat non hic ratione ut quis sequi.', 78895, 1733401583, 1733401583, 1, 4),
+	(8, 'Secured exuding paradigm', 'Eum dolor explicabo quibusdam. Cumque qui eveniet recusandae in. Est quos quae sed aperiam. Voluptas ut facilis sed ea sit non ab.', 30053, 1733401583, 1733401583, 1, 1),
+	(9, 'User-centric didactic definition', 'Non placeat omnis qui nulla exercitationem. Cum quia quam natus. Et a accusamus maxime aliquid.', 43587, 1733401583, 1733401583, 1, 2),
+	(10, 'Future-proofed 5thgeneration benchmark', 'Amet iure ab rerum eaque qui. Voluptates et exercitationem aliquid cum. Aut aut aspernatur tempore aut.', 27585, 1733401583, 1733401583, 1, 2),
+	(11, 'Multi-layered 24/7 task-force', 'Eveniet error sit maxime numquam quos fugit eaque. Repellat sed voluptate sed voluptas quam rerum.', 62474, 1733401583, 1733401583, 1, 0),
+	(12, 'Versatile coherent hierarchy', 'Unde voluptas et molestias sunt nostrum ab porro. Cum explicabo nam tempore hic dolores illo. Temporibus laboriosam nesciunt in temporibus sint ut.', 55523, 1733401583, 1733401583, 1, 2),
+	(13, 'Intuitive empowering analyzer', 'Cupiditate cumque velit consequuntur iure rerum. Quidem veniam dolore praesentium rerum quo ab.', 60701, 1733401583, 1733401583, 1, 0),
+	(14, 'Function-based systemic capability', 'Ipsa reiciendis quis aut. Non nemo et cumque enim omnis est. Non et saepe quidem laboriosam dolorem ut alias. Laborum nihil autem sint nihil eligendi quo.', 73523, 1733401583, 1733401583, 1, 4),
+	(15, 'Implemented well-modulated ability', 'Eaque a non dolores iure magni consequatur. Voluptatum beatae repudiandae cum quibusdam nobis facilis corporis. Iusto fugiat porro modi consequatur officia quas.', 71507, 1733401583, 1733401583, 1, 4),
+	(16, 'Organized attitude-oriented capability', 'Cum architecto expedita esse voluptatem. Nihil aut rerum animi iusto iusto cum.', 77515, 1733401583, 1733401583, 1, 3),
+	(17, 'Organic neutral openarchitecture', 'Quod et modi eos possimus. Et accusamus eligendi quia et sunt.', 48835, 1733401583, 1733401583, 1, 1),
+	(18, 'Versatile 4thgeneration portal', 'Sed cum id ut enim ab voluptatem. Reprehenderit ratione veniam et dolores. Eaque id vero est ut. Quae nisi quas recusandae illo eum veritatis sed.', 37111, 1733401583, 1733401583, 1, 1),
+	(19, 'Polarised tangible database', 'Harum quia unde eum ut ducimus aliquam nihil. Autem et iusto perferendis.', 25287, 1733401583, 1733401583, 1, 0),
+	(20, 'Reactive bifurcated application', 'Eius dignissimos quis et. Sint laudantium suscipit quaerat voluptatum. Laboriosam minima id iure eos tempore aut.', 23217, 1733401583, 1733401583, 1, 2),
+	(21, 'Fundamental foreground instructionset', 'Earum consequatur ut atque animi et. Assumenda sed id et sequi voluptatum. Numquam odio dolores doloremque voluptates aut.', 39263, 1733401583, 1733401583, 1, 3),
+	(22, 'Robust responsive project', 'Placeat consequatur aperiam sit laudantium. Tempora non repellat perferendis culpa laborum.', 37801, 1733401583, 1733401583, 1, 2),
+	(23, 'Re-contextualized eco-centric internetsolution', 'At repudiandae deleniti dignissimos. Magnam aut corporis distinctio nulla suscipit corporis. Temporibus qui voluptatem in aperiam qui. Qui perferendis et minus qui.', 20738, 1733401583, 1733401583, 1, 4),
+	(24, 'Networked systematic attitude', 'Est aliquid expedita ut in odit laborum. Doloremque voluptatem assumenda iusto. Quae nobis et modi sapiente.', 57066, 1733401583, 1733401583, 1, 2),
+	(25, 'Inverse client-server migration', 'Molestias ad labore dolorem. Numquam reiciendis perferendis ad quaerat optio est quia. Iste quidem aut dolorem non.', 26242, 1733401583, 1733401583, 1, 3),
+	(26, 'Fully-configurable methodical core', 'Numquam repudiandae est fugiat voluptatum quas. Eos eos possimus rerum quos quis. Nulla amet enim officia voluptatum.', 27094, 1733401583, 1733401583, 1, 2),
+	(27, 'Proactive high-level analyzer', 'Sit et rerum consequatur. Fugit sed alias sed quos qui non quo. Quidem dicta enim quae.', 61858, 1733401583, 1733401583, 1, 1),
+	(28, 'Implemented tangible database', 'A pariatur enim modi. Doloremque dolores incidunt est. Omnis explicabo veritatis qui ut.', 35263, 1733401583, 1733401583, 1, 1),
+	(29, 'Cross-platform intangible portal', 'Quis ut quos qui. Et ut inventore in vel. Sed adipisci ut quos laborum ut molestiae et excepturi. Voluptatem in voluptatem non qui.', 67327, 1733401583, 1733401583, 1, 1),
+	(30, 'Object-based client-server toolset', 'Ipsa quibusdam rerum accusantium consectetur quam libero dolorem. Officiis totam ipsa amet nulla et. Ullam nihil reiciendis deleniti.', 52525, 1733401583, 1733401583, 1, 4),
+	(31, 'Configurable motivating attitude', 'Laboriosam aut iure sunt pariatur officiis tempora. Enim et rem hic beatae sit. Laudantium in facilis voluptas ut corrupti. Atque fugiat qui assumenda alias nesciunt qui.', 47134, 1733401583, 1733401583, 1, 3),
+	(32, 'Organic methodical initiative', 'Numquam rerum incidunt sapiente tenetur autem. Ut pariatur voluptate ut. Qui dicta cumque qui iure sint.', 43616, 1733401583, 1733401583, 1, 3),
+	(33, 'Persevering logistical throughput', 'Ullam vel in rem. Id deleniti magnam exercitationem aut et. Nihil voluptatibus id sed animi repellat.', 30371, 1733401583, 1733401583, 1, 3),
+	(34, 'Re-contextualized responsive implementation', 'Dolorum nobis quam error aut. Numquam officiis minima quia placeat dolores fugit.', 54161, 1733401583, 1733401583, 1, 1),
+	(35, 'Reverse-engineered hybrid attitude', 'Molestias veritatis ea ab necessitatibus. Fuga placeat ad quia qui. Earum ut voluptatem officia dolores quasi cupiditate et.', 53168, 1733401583, 1733401583, 1, 0),
+	(36, 'Reverse-engineered neutral workforce', 'Tempora tempora id consectetur eum eaque. Et qui fugiat autem ab ut. Quis et doloremque iusto sunt. Consectetur nesciunt distinctio optio non.', 85003, 1733401583, 1733401583, 1, 1),
+	(37, 'Customer-focused multi-tasking functionalities', 'Est est nesciunt ratione id aut omnis. Est sapiente magnam magnam molestias. Quibusdam cumque necessitatibus est aut totam harum et et.', 59887, 1733401583, 1733401583, 1, 4),
+	(38, 'Optimized static installation', 'Dolorem quos rerum rem eum. Maiores velit quos natus blanditiis qui consequatur accusantium. Culpa maxime labore amet nihil.', 79682, 1733401583, 1733401583, 1, 3),
+	(39, 'Organic eco-centric framework', 'Alias perferendis ipsa est et officia. Alias consequuntur tempora non quisquam necessitatibus beatae saepe qui.', 48088, 1733401583, 1733401583, 1, 0),
+	(40, 'Up-sized homogeneous infrastructure', 'Voluptatem in in veritatis. In molestiae aut sunt animi vel.', 48604, 1733401583, 1733401583, 1, 4),
+	(41, 'Visionary stable flexibility', 'Harum odio ex eligendi porro odio ex. Explicabo sunt voluptate enim esse sint expedita ipsum.', 83144, 1733401583, 1733401583, 1, 1),
+	(42, 'Cross-group eco-centric superstructure', 'Magni odit corrupti mollitia voluptate voluptatem est. Ullam dolore voluptatum ad quaerat ducimus. Nemo occaecati architecto quasi est.', 35541, 1733401583, 1733401583, 1, 0),
+	(43, 'Multi-lateral optimal intranet', 'Est sed non quod eligendi. Dolorum qui eius eveniet. Doloremque optio ipsum laboriosam atque sed. Sed perspiciatis fugiat voluptas suscipit.', 51286, 1733401583, 1733401583, 1, 2),
+	(44, 'Implemented content-based synergy', 'Necessitatibus animi rem libero eaque. Dolore commodi id consequatur voluptates.', 46871, 1733401583, 1733401583, 1, 0),
+	(45, 'Assimilated nextgeneration capability', 'Voluptas ipsam quis et. Incidunt blanditiis et officiis nisi at. Exercitationem ducimus atque eveniet eos. Omnis enim et est delectus omnis.', 28221, 1733401583, 1733401583, 1, 2),
+	(46, 'Exclusive systematic approach', 'Dolores sit dolorem fuga ut ut aut. Quis id voluptas quasi a sequi et temporibus. Veniam quisquam et dignissimos odit aut aliquam.', 31315, 1733401583, 1733401583, 1, 1),
+	(47, 'Diverse holistic algorithm', 'Et ut qui eos autem. Illum molestiae non dolores ut. Aut libero quasi qui dolor.', 45142, 1733401583, 1733401583, 1, 2),
+	(48, 'Fundamental analyzing access', 'Aut in aut earum atque iure voluptates reiciendis. At exercitationem illo earum minus voluptates.', 70748, 1733401583, 1733401583, 1, 2),
+	(49, 'Team-oriented demand-driven data-warehouse', 'Numquam suscipit cupiditate magni veritatis dolorem numquam veritatis. Inventore perspiciatis amet omnis cumque. Nisi sit voluptas similique dolor consequatur omnis pariatur sunt.', 50256, 1733401583, 1733401583, 1, 1),
+	(50, 'Operative systematic solution', 'In quod culpa fuga ex ea dicta. Rerum magnam dolores doloribus. Consequuntur sint nam sint qui est quas quam. Officia maiores sed quia quidem.', 60165, 1733401583, 1733401583, 1, 0);
+
+-- Дамп структуры для таблица yii.service
+CREATE TABLE IF NOT EXISTS `service` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Название',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Сервис';
+
+-- Дамп данных таблицы yii.service: ~5 rows (приблизительно)
+INSERT INTO `service` (`id`, `title`) VALUES
+	(1, 'Сервис 1'),
+	(2, 'Сервис 2'),
+	(3, 'Сервис 3'),
+	(4, 'Сервис 4'),
+	(5, 'Сервис 5'),
+	(6, 'Сервис 6');
 
 -- Дамп структуры для таблица yii.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -162,13 +266,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `password_reset_token` (`password_reset_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Пользователи';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Пользователи';
 
--- Дамп данных таблицы yii.users: ~3 rows (приблизительно)
+-- Дамп данных таблицы yii.users: ~4 rows (приблизительно)
 INSERT INTO `users` (`id`, `username`, `auth_key`, `password_hash`, `password_reset_token`, `email`, `last_name`, `first_name`, `patronymic`, `verification_token`, `status`, `created_at`, `updated_at`, `role`, `ip`, `avatar`) VALUES
-	(1, 'admin', 'W9HirRe4pdCMSTMWE9_xof5ifsDXWVFA', '$2y$13$Jmu9Ogc3BGVOTfXys/nULe.r1jRd5Rujyfp8fl3spO9fdRpZG/7Eu', 'MBmLeNvhXe3-qdmaSwbJsutyD4OSMAXN_1732627194', 'galina80@narod.ru', 'Орлов', 'Даниил', 'Евгеньевич', 'CkCJIUBDLpRLBiacnzziR0owsbrl5tXi_1732627194', 1, 1732627194, 1732627194, 'admin', '172.20.0.1', NULL),
-	(2, 'test', 'rL8vnvDsW4nWAcYWs0BGae6XSrTPvjW1', '$2y$13$jfi8qV.8f7n6Js7ik8yQFuLvIMQKuLdihBuegenn6xmVubUscUDSi', 'gerpDVG0jTV30JCQZXHtIfBjqUEbpLwM_1732627195', 'donat.ponomarev@mail.ru', 'Бобылёв', 'Валерия', 'Виктор Львович Яковлев', 'ktrHgssqbTcnVqaBxEZjAt0Z6OxjyvuH_1732627195', 1, 1732627194, 1732686087, 'user', '172.20.0.1', NULL),
-	(3, 'user', 'r34dlBq5zlv8er7hI7Owp9UXOduIHF3G', '$2y$13$X7Y.D/VJ4UXhaEYScrO08u9kWTewtUGG58X5H57B3b.7lPV378.PG', 'h7zhp7BEOnw8ms0JCojl_HBHcaP8UOJR_1732627195', 'klim.birukov@mail.ru', 'Ефимова', 'Лада', 'Артём Фёдорович Мартынов', 'UQTJd2KqsRQygWEXPbEEH3Q23aNBHd9O_1732627195', 1, 1732627194, 1732627194, 'admin', NULL, NULL);
+	(1, 'admin', 'B2-UvsmbVgPPowPP6Q-vdLFUiWloMLqo', '$2y$13$ssWzX1Bl7vB9Z3IUUn.4/.ml5YuPrCQePIkQt9lzydqK9u2qpeZJm', '6t0zMpEctNt1zztSwenx7HPtlrZ1Ls6X_1733401582', 'sukina.tatana@martynova.com', 'Аксёнов', 'Марта', 'Борисовна ', 'GAr59HGalZW4Dzlqg3wldOhBU_ZVluSZ_1733401582', 1, 1733401581, 1733473743, 'admin', '172.20.0.1', NULL),
+	(2, 'test', 'lOUEjxnUAikJBzSEUcJTkBNzMl52pmtc', '$2y$13$cnsyljPpbcXMttwCJug3POIN45XL0osjAsxg8SGcvzmiVUIxFAsqG', 'N1a24evJHeZWFVNwBXscRrct_ETM-t1Q_1733401582', 'malvina.ponomarev@aleksandrova.com', 'Королёва', 'Марина', 'Фёдоровна ', '7_NMX-_gpsjbDsU74qciV2BSxZkMF0Eg_1733401582', 1, 1733401581, 1733470795, 'user', '172.20.0.1', NULL),
+	(3, 'user', 'Ysrcb1e8lcq3VEKCNazAShGV_wF5hSZa', '$2y$13$8Fvfo8E3aOmj/WuUAKggNOGmORRnXlMkc3ajcZoeBWVMXgz2eR72.', 'IaAQJadwnVcT0zn7Dh31Bo4BIPBOWbUW_1733401583', 'mdavydova@savelev.ru', 'Герасимов', 'Михаил', 'Максимовмч', 'x0ebH9H1CJLUXCe3355FFtnUK2eiYpfU_1733401583', 1, 1733401581, 1733473735, 'user', NULL, NULL),
+	(4, 'ivan', 'Sugum3G0PGAqdssCnvzLCzHzIvDQNCfM', '$2y$13$Me2oHkldFx9JLQoxSjsYM./Nr.P58vSWocqUezcAa34utyErkwZYq', 'gK53dMPTKwE2rCcARN-64tODE7W78Yy8_1733473789', 'ivan@rr.ru', 'Иванов', 'Иван', 'Иванович', NULL, 1, 1733473789, 1733473950, 'user', NULL, NULL);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

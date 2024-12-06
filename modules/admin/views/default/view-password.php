@@ -4,6 +4,7 @@ use yii\bootstrap5\Html;
 use yii\helpers\Url;
 
 /** @var \app\modules\admin\services\PasswordEncryption $view_password */
+/** @var \app\models\Passwords $service */
 ?>
 <style>
     /* стили текстового поля */
@@ -17,10 +18,12 @@ use yii\helpers\Url;
     <?php if ($view_password != null): ?>
 
         <div id="text1">
-            <p class="text-center text-success ">
-                <input class="form-control" id="inputText" type="text" value= <?= $view_password; ?>>
-                <?php //$view_password; ?>
-            </p>
+            <?php if ($service): ?>
+                <p class="text-center text-primary ">Сервис: <?= $service; ?></p>
+            <?php endif; ?>
+            <input class="form-control" id="inputText" type="text" value= <?= $view_password; ?>>
+            <?php //$view_password; ?>
+
         </div>
 
         <!--            <button click="navigator.clipboard.writeText('Текст')">Скопировать</button>-->

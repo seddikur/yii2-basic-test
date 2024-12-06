@@ -61,8 +61,9 @@ class DefaultController extends Controller
         $view_password = null;
         if ($model){
             $view_password = $this->passwordEncryption->reverseEncryption($model->password);
+            $service = $model->service->title;
         }
 
-        return $this->renderAjax('view-password', compact('view_password'));
+        return $this->renderAjax('view-password', compact('view_password', 'service'));
     }
 }

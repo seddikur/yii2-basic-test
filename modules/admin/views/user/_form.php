@@ -25,14 +25,21 @@ use kartik\select2\Select2;
                     <?= $form->field($model, 'first_name')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'patronymic')->textInput(['maxlength' => true]) ?>
                     <?php
-                    echo $form->field($model, 'group_id')->widget(Select2::class, [
-                        'data' => \yii\helpers\ArrayHelper::map(\app\models\Groups::find()->asArray()->all(), 'id', 'title'),
-                        'language' => 'ru',
-                        'options' => ['placeholder' => 'Выбери  ...'],
-                        'pluginOptions' => [
-                            'allowClear' => true
-                        ],
-                    ]); ?>
+//                    echo $form->field($model, 'group_id')->widget(Select2::class, [
+//                        'data' => \yii\helpers\ArrayHelper::map(\app\models\Groups::find()->asArray()->all(), 'id', 'title'),
+//                        'language' => 'ru',
+//                        'options' => ['placeholder' => 'Выбери  ...'],
+//                        'pluginOptions' => [
+//                            'allowClear' => true
+//                        ],
+//                    ]);
+
+
+                    echo $form->field($model, 'group_id')->checkboxList(
+                        \yii\helpers\ArrayHelper::map( \app\models\Groups::find()->asArray()->all(), 'id', 'title'),
+                        ['separator' => '<br>']
+                    );
+                    ?>
                 </div>
             </div>
         </div>

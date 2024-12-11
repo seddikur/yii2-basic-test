@@ -36,11 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-//            'id',
-//            'sault',
-//            'password',
-            'hash',
-
             [
                 'format' => 'raw',
                 'attribute' => 'organization_id',
@@ -63,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     'pluginOptions' => [
                         'allowClear' => true,
-                        'multiple' => false,
+                        'multiple' => true,
                     ]
                 ]),
             ],
@@ -93,10 +88,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]),
             ],
+            'hash',
+
+
+
             [
                 'format' => 'raw',
                 'attribute' => 'Доступен для групп',
-                /** @var \app\models\Users $data */
+                /** @var \app\models\Passwords $data */
                 'value' => function ($data) {
                     return $data->getGroup();
                 },

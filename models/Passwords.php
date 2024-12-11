@@ -53,7 +53,10 @@ class Passwords extends \yii\db\ActiveRecord
     {
         return [
             [['password', 'hash', 'organization_id'], 'required'],
-            [['sault', 'password', 'hash'], 'string', 'max' => 255],
+            [['sault', 'hash'], 'string', 'max' => 255],
+
+            ['password', 'string', 'min' => 12, 'max' => 255],
+            ['password', 'string', 'min' => 12, 'max' => 255],
 
             [['organization_id', 'created_at', 'updated_at', 'service_id'], 'integer'],
             [['ip'], 'string', 'max' => 64],

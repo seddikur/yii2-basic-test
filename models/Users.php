@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 use app\models\forms\UserForm;
+use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "users".
@@ -67,7 +69,7 @@ class Users extends \yii\db\ActiveRecord
 
             ['username', 'match', 'pattern' => '#^[\w_-]+$#is'],
             ['username', 'unique', 'targetClass' => UserForm::className(), 'message' => 'Это имя пользователя уже было занято.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            ['username', 'string', 'min' => 4, 'max' => 255],
 
             ['status', 'default', 'value' => Constants::STATUS_ACTIVE],
             ['status', 'in', 'range' => array_keys(UserForm::getStatusesArray())],
@@ -153,6 +155,22 @@ class Users extends \yii\db\ActiveRecord
     public function getFullName(): string
     {
         return $this->last_name  . ' ' . $this->first_name  . (!empty($this->patronymic ) ? ' ' . $this->patronymic  : '');
+    }
+
+    /**
+     * Список пользователей по Полному имени
+     * @return string
+     */
+    public static function getAllUsersArray(): array
+    {
+        $users = \app\models\Users::find()->all();
+        $array = ArrayHelper::map(
+            $users,'id',
+            function ($users, $defaultValue) {
+                return $users->getFullName();
+            }
+            );
+        return $array;
     }
 
     /*****************************************************************************************************************

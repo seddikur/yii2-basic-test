@@ -11,10 +11,10 @@ return [
         'type' => 1,
         'description' => 'Пользователи',
     ],
-    'moder' => [
-        'type' => 1,
-        'description' => 'Модераторы',
-    ],
+//    'moder' => [
+//        'type' => 1,
+//        'description' => 'Модераторы',
+//    ],
     'admin' => [
         'type' => 1,
         'description' => 'Администраторы',

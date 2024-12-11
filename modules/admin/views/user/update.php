@@ -7,7 +7,7 @@ use yii\helpers\VarDumper;
 /* @var $model \app\models\forms\UserForm */
 
 $this->title = $model->first_name;
-$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Список пользователей', 'url' => ['index']];
 //$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Редактирование пользователя';
 ?>

@@ -143,7 +143,6 @@ class PasswordsController extends Controller
 
             if ($model->load($this->request->post()) && $model->save()) {
 
-
                 //записываем группы
                 $values = [];
                 foreach ($model->group_id as $group_id){
@@ -214,6 +213,7 @@ class PasswordsController extends Controller
             foreach ($model->group_id as $group_id) {
                 $values[] = [$model->id, $group_id];
             }
+
             //записываем массив в таблицу GroupPassword
 //            \Yii::$app->db->createCommand()->batchInsert(GroupPassword::tableName(), ['password_id', 'group_id'], $values)->execute();
             if (! empty($values)) $model->getDb()->createCommand()->batchInsert(GroupPassword::tableName(), ['password_id', 'group_id'], $values)->execute();

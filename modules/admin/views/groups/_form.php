@@ -29,7 +29,22 @@ use yii\bootstrap5\ActiveForm;
                 </div>
             </div>
         </div>
-
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <?php
+                    echo $form->field($model, 'array_user_id')->widget(\kartik\select2\Select2::class, [
+                        'data' => \yii\helpers\ArrayHelper::map(\app\models\Users::find()->asArray()->all(), 'id', 'username'),
+                        'language' => 'ru',
+                        'options' => ['placeholder' => 'Выбери  ...'],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'multiple' => true,
+                        ],
+                    ]); ?>
+                </div>
+            </div>
+        </div>
 
         <div class="form-group">
             <?= $this->render('@buttons/_submitButtonsStandard', ['model' => $model]) ?>

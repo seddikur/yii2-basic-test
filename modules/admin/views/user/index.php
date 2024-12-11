@@ -11,8 +11,9 @@ use yii\helpers\ArrayHelper;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var \app\models\search\UserSearch $searchModel */
 
-$this->title = 'Пользователи';
+$this->title = 'Список пользователей';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
@@ -36,22 +37,36 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             'username',
-            'last_name',
-            'first_name',
-            'patronymic',
             'email:email',
             [
                 'format' => 'raw',
-                'attribute' => 'status',
+                'attribute' => 'ФИО',
                 'value' => function ($data) {
                     /** @var $data Users */
-                    return $data->getStatusName();
+                    return $data->getFullName();
                 },
+                'filter' => \kartik\select2\Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'id_name',
+                    'data' => Users::getAllUsersArray(),
+                    'hideSearch' => true,
+                    'options' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'все'
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'multiple' => true,
+                    ]
+                ]),
             ],
+
+
             [
                 'format' => 'raw',
                 'attribute' => 'group_id',
@@ -60,6 +75,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->getGroupName();
                 },
             ],
+            [
+                'format' => 'raw',
+                'attribute' => 'status',
+                'value' => function ($data) {
+                    /** @var $data Users */
+                    return $data->getStatusName();
+                },
+            ],
+
 //            'updated_at:date',
             [
                 'attribute' => 'role',
@@ -72,11 +96,11 @@ $this->params['breadcrumbs'][] = $this->title;
 //                    return Url::toRoute([$action, 'id' => $model->id]);
 //                }
 //            ],
-            'created_at:date',
+//            'created_at:date',
             [
                 'class' => \app\components\classes\CustomActionColumnClass::class,
-                'headerOptions' => ['style' => 'width:10%'],
-                'template' => '{login} {view} {update}  {delete}',
+                'headerOptions' => ['style' => 'width:7%'],
+                'template' => '{view} {update}  {delete}',
 //                'urlCreator' => function ($action, $model) {
 //                    if ($action === 'view') {
 //                        return '/user/login_as_user?id=' . $model->id;
@@ -89,10 +113,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => 'Change user role'
                         ]);
                     },
-                    'login' => function ($url, $model, $key) {
-                        $url = 'login_as_user?id=' . $model->id;
-                        return Html::a('<i class="bi bi-box-arrow-in-right "></i>', $url);
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a('<i class="bi bi-trash text-danger"></i>',
+                            $url, ['data-confirm' =>  'Вы уверены что хотите удалить Пользователя - ' . $model->getFullName() . '?',
+                                'data-method' => 'post',
+                                'data-pjax' => '1',
+                            ]);
                     },
+//                    'login' => function ($url, $model, $key) {
+//                        $url = 'login_as_user?id=' . $model->id;
+//                        return Html::a('<i class="bi bi-box-arrow-in-right "></i>', $url);
+//                    },
                 ],
                 'visibleButtons' => [
 //                    'view'   => function (Users $user) {

@@ -5,7 +5,7 @@ use yii\bootstrap4\Html;
 /* @var $model \app\models\forms\UserForm */
 
 $this->title = 'Новый пользователь';
-$this->params['breadcrumbs'][] = ['label' => 'Пользователи', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Список пользователей', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

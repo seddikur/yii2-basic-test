@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use app\modules\user\User;
 use Yii;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "groups".
@@ -18,6 +20,9 @@ use Yii;
  */
 class Groups extends \yii\db\ActiveRecord
 {
+    /** @var array Виртуально поле пользователи */
+    public $array_user_id;
+
     /**
      * {@inheritdoc}
      */
@@ -35,6 +40,7 @@ class Groups extends \yii\db\ActiveRecord
             [['title'], 'required'],
             [['status'], 'integer'],
             [['title', 'description'], 'string', 'max' => 255],
+            [['array_user_id'], 'safe'],
         ];
     }
 
@@ -48,6 +54,9 @@ class Groups extends \yii\db\ActiveRecord
             'title' => 'Название',
             'description' => 'Описание',
             'status' => 'Статус',
+
+            //доп поле
+            'array_user_id' => 'Пользователи',
         ];
     }
 
@@ -75,6 +84,22 @@ class Groups extends \yii\db\ActiveRecord
                 break;
         }
         return false;
+    }
+
+    /**
+     * Название групп
+     * @return string
+     */
+    public function getGroupName()
+    {
+        $groups = GroupUser::find()->asArray()->where(['group_id' => $this->id])->all();
+
+        $name = '';
+        foreach ($groups as $group_id) {
+            $name_user = Users::findOne(['id' => $group_id['user_id']]);
+            $name .= '<span class="badge text-bg-secondary">' . $name_user->username . '</span>' . ' ';
+        }
+        return $name;
     }
 
     /**

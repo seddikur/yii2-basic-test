@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //            'id',
                 'title',
                 'description',
-                'created_at:datetime',
+//                'created_at:datetime',
 //            'updated_at',
                 [
                     'class' => \app\components\classes\CustomActionColumnClass::class,

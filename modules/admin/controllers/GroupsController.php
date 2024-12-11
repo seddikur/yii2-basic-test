@@ -2,8 +2,14 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\GroupPassword;
 use app\models\Groups;
+use app\models\GroupUser;
+use app\models\OrganizationUser;
+use app\models\search\GroupsSearch;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -38,21 +44,11 @@ class GroupsController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Groups::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new GroupsSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -103,8 +99,17 @@ class GroupsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $group_user = GroupUser::findAll(['group_id' => $id]);
+        $model->array_user_id =ArrayHelper::getColumn($group_user, 'user_id',);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($model->load($this->request->post()) && $model->save()) {
+            GroupUser::deleteAll(['group_id' => $id]);
+            $values = [];
+            foreach ($model->array_user_id as $user_id) {
+                $values[] = [$id, $user_id];
+            }
+            //записываем массив в таблицу GroupUser
+            if (! empty($values))  \Yii::$app->db->createCommand()->batchInsert(GroupUser::tableName(), [ 'group_id', 'user_id'], $values)->execute();
             \Yii::$app->session->setFlash('success', 'Группа '.$model->title.' успешно изменена!');
             return $this->redirect(['index',]);
         }
@@ -123,6 +128,8 @@ class GroupsController extends Controller
      */
     public function actionDelete($id)
     {
+        GroupUser::deleteAll(['group_id' => $id]);
+        GroupPassword::deleteAll(['group_id' => $id]);
         $this->findModel($id)->delete();
         \Yii::$app->session->setFlash('danger', 'Группа удалена!');
         return $this->redirect(['index']);

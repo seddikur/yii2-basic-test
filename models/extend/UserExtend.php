@@ -9,6 +9,7 @@
 namespace app\models\extend;
 
 use app\models\Constants;
+use app\models\Groups;
 use app\models\GroupUser;
 use app\models\Users;
 use Yii;
@@ -147,18 +148,18 @@ class UserExtend extends Users implements IdentityInterface
     public static function getStatusesArray()
     {
         return [
-            Constants::STATUS_WAIT => Yii::t('app', 'Не подтвержден'),
-            Constants::STATUS_ACTIVE => Yii::t('app', 'Активен'),
-            Constants::STATUS_BLOCKED => Yii::t('app', 'Заблокирован'),
+            Constants::STATUS_ACTIVE => 'Активен',
+            Constants::STATUS_WAIT =>  'Не подтвержден',
+            Constants::STATUS_BLOCKED =>'Заблокирован',
         ];
     }
 
     public function getStatusList()
     {
         return [
-            Constants::STATUS_WAIT => Yii::t('app', 'Не подтвержден'),
-            Constants::STATUS_ACTIVE => Yii::t('app', 'Активен'),
-            Constants::STATUS_BLOCKED => Yii::t('app', 'Заблокирован'),
+            Constants::STATUS_ACTIVE =>  'Активен',
+            Constants::STATUS_WAIT => 'Не подтвержден',
+            Constants::STATUS_BLOCKED => 'Заблокирован',
         ];
     }
 
@@ -200,13 +201,16 @@ class UserExtend extends Users implements IdentityInterface
      */
     public function getGroupName()
     {
-        $group = GroupUser::findOne(['user_id' => $this->id]);
-        if (!empty($group->group)) {
-            return '<span class="badge text-bg-secondary">' . $group->group->title . '</span>';
-        } else {
-            return '';
+        $groups = GroupUser::find()->asArray()->where(['user_id' => $this->id])->all();
+
+        $name = '';
+        foreach ($groups as $group_id) {
+            $name_group = Groups::findOne(['id' => $group_id['group_id']]);
+            $name .= '<span class="badge text-bg-secondary">' . $name_group->title . '</span>' . ' ';
         }
+        return $name;
     }
+
 
     /**
      * Id групп пользователя

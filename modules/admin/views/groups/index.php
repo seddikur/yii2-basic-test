@@ -8,6 +8,7 @@ use yii\grid\GridView;
 use yii\widgets\Pjax;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var app\models\search\GroupsSearch $searchModel */
 
 $this->title = 'Группы пользователей';
 $this->params['breadcrumbs'][] = $this->title;
@@ -24,11 +25,38 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
 //            'id',
-            'title',
+//            'title',
+            [
+                'format' => 'raw',
+                'attribute' => 'title',
+                /** @var \app\models\Groups $data */
+                'value' => function ($data) {
+                    return $data->title;
+                },
+                'filter' => \kartik\select2\Select2::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'title',
+                    'data' => \yii\helpers\ArrayHelper::map(
+                        \app\models\Groups::find()
+                            ->asArray()
+                            ->all(),
+                        'id', 'title'),
+                    'hideSearch' => true,
+                    'options' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'все'
+                    ],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'multiple' => true,
+                    ]
+                ]),
+            ],
             'description',
             [
                 'format' => 'raw',
@@ -36,6 +64,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) {
                     /** @var $data Groups */
                     return $data->getStatusNameGroup();
+                },
+            ],
+            [
+                'format' => 'raw',
+                'attribute' => 'array_user_id',
+                'value' => function ($data) {
+                    /** @var $data Groups */
+                    return $data->getGroupName();
                 },
             ],
 

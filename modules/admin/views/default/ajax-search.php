@@ -1,7 +1,6 @@
 <?php
 
 use app\models\GroupUser;
-use common\models\AdsCampaign;
 use yii\bootstrap4\Html;
 use yii\helpers\Url;
 

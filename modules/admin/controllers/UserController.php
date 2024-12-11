@@ -71,11 +71,11 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $allUserSearch = new UserSearch();
-        $dataProviderUserSearch = $allUserSearch->search(Yii::$app->request->queryParams);
+        $searchModel = new UserSearch();
+        $dataProviderUserSearch = $searchModel->search( $this->request->queryParams);
 
         return $this->render('index', [
-            'allUserSearch' => $allUserSearch,
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProviderUserSearch,
         ]);
     }
@@ -98,9 +98,9 @@ class UserController extends Controller
                 ],
             ]
         ]);
-        $query_pass = Passwords::find()
+        $query_pass = GroupPassword::find()
             ->where(['user_id' => $id]);
-        $dataProviderPassword = new ActiveDataProvider([
+        $dataProviderGroupPassword = new ActiveDataProvider([
             'query' => $query_pass,
             'sort' => [
                 'defaultOrder' => [
@@ -111,7 +111,7 @@ class UserController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
             'dataProvider' => $dataProvider,
-            'dataProviderPassword' => $dataProviderPassword
+            'dataProviderGroupPassword' => $dataProviderGroupPassword
         ]);
     }
 
@@ -126,11 +126,17 @@ class UserController extends Controller
         $modelUserForm->scenario = 'create-user';
 
         if ($modelUserForm->load(Yii::$app->request->post()) && $modelUserForm->save()) {
-            $group_user = new  GroupUser();
-            $group_user ->group_id = $modelUserForm->group_id;
-            $group_user ->user_id = $modelUserForm->id;
-            $group_user->save();
-            Yii::$app->getSession()->setFlash('success', 'Пользователь '.$modelUserForm->first_name.' успешно добавлен');
+//            $group_user = new  GroupUser();
+//            $group_user ->group_id = $modelUserForm->group_id;
+//            $group_user ->user_id = $modelUserForm->id;
+//            $group_user->save();
+            $values = [];
+            foreach ($modelUserForm->group_id as $group_id) {
+                $values[] = [$modelUserForm->id, $group_id];
+            }
+            //записываем массив в таблицу GroupUser
+            if (! empty($values)) $modelUserForm->getDb()->createCommand()->batchInsert(GroupUser::tableName(), ['user_id', 'group_id'], $values)->execute();
+            Yii::$app->getSession()->setFlash('success', 'Пользователь '.$modelUserForm->getFullName().' успешно добавлен');
                 return $this->redirect(['index']);
         }
 
@@ -150,16 +156,25 @@ class UserController extends Controller
     {
         $modelUserForm = UserForm::findOne($id);
         $group_user = GroupUser::findAll(['user_id' => $id]);
-        $modelUserForm->group_id =$group_user;
+//        $modelUserForm->group_id =$group_user;
+        $modelUserForm->group_id =ArrayHelper::getColumn($group_user, 'group_id',);
 
 //        if ($this->request->isPost && $modelUserForm->load($this->request->post()) && $modelUserForm->save()) {//
         if ($modelUserForm->load(Yii::$app->request->post())) {
             if ($modelUserForm->save()) {
                 GroupUser::deleteAll(['user_id' => $id]);
-                $group_user = new  GroupUser();
-                $group_user ->group_id = $modelUserForm->group_id;
-                $group_user ->user_id = $id;
-                $group_user->save();
+//                $group_user = new  GroupUser();
+//                $group_user ->group_id = $modelUserForm->group_id;
+//                $group_user ->user_id = $id;
+//                $group_user->save();
+                $values = [];
+                foreach ($modelUserForm->group_id as $group_id) {
+                    $values[] = [$id, $group_id];
+                }
+                //записываем массив в таблицу GroupUser
+                if (! empty($values))  \Yii::$app->db->createCommand()->batchInsert(GroupUser::tableName(), ['user_id', 'group_id'], $values)->execute();
+
+//                if (! empty($values)) $modelUserForm->getDb()->createCommand()->batchInsert(GroupUser::tableName(), ['user_id', 'group_id'], $values)->execute();
                 \Yii::$app->session->setFlash('success', 'Данные пользователя '.$modelUserForm->first_name.' успешно изменены!');
                 return $this->redirect(['index']);
             } else {

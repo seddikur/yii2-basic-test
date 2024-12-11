@@ -28,7 +28,7 @@ class UserForm extends UserExtend
     public function rules()
     {
         $items = UserExtend::rules();
-        $items[] = [['email', 'group_id'], 'required'];
+        $items[] = [['email', 'group_id', 'username'], 'required'];
         $items[] = [['password', 'password_confirm'], 'required', 'on' => 'create-user'];
         $items[] = [['password', 'password_confirm'], 'string'];
         $items[] = ['password_confirm', 'compare', 'compareAttribute' => 'password'];

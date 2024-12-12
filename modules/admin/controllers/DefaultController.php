@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\forms\SearchForm;
 use app\models\GroupUser;
 use app\models\Passwords;
 use app\models\Users;
@@ -10,6 +11,7 @@ use app\modules\admin\services\PasswordEncryption;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use Yii;
 
 /**
  * Default controller for the `admin` module
@@ -36,11 +38,55 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+
+        $model = new SearchForm();
+
+        if(\Yii::$app->request->isAjax){
+            $this->layout = 'password';
+            $data = Yii::$app->request->post('search');
+//            VarDumper::dump($data,10, true);
+//            return 'Запрос принят!';
+
+
+            $password = \app\models\Passwords::findOne(['hash' => $data]);
+            $user_group = GroupUser::findOne(['user_id' => \Yii::$app->user->id]);
+            if (!$password) {
+                \Yii::$app->session->setFlash('success', 'Не найдено паролей');
+            }
+            $password_group = \app\models\GroupPassword::findOne(['password_id' => $password->id]);
+            if (\Yii::$app->user->identity->isAdmin()) {
+                $result = $this->passwordEncryption->reverseEncryption($password['password']);
+                $service = $password->service->title;
+                return $this->render('view', compact('result', 'service'));
+            } else {
+                if ($user_group->group_id == $password_group->group_id) {
+                    $result = $this->passwordEncryption->reverseEncryption($password['password']);
+                    $service = $password->service->title;
+                    return $this->render('view', compact('result', 'service'));
+
+                } else {
+                    $result = null;
+                }
+
+            }
+        }
+
+        return $this->render('index', [
+            'model' => $model,
+        ]);
     }
 
+    public function actionView()
+    {
+        VarDumper::dump(Yii::$app->request->post(),10, true);
+
+        return $this->renderAjax('view');
+
+    }
+
+
     /**
-     * Результаты поиска по каталогу товаров
+     * Результаты поиска
      */
     public function actionSearch()
     {
@@ -75,6 +121,8 @@ class DefaultController extends Controller
             '_search',
             compact('result','service')
         );
+
+
     }
 
     /**

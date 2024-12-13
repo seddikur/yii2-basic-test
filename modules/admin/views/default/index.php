@@ -9,44 +9,39 @@ use yii\bootstrap5\Modal;
 $this->title = 'Поиск пароля по hash';
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php
-Modal::begin([
-//    'header' => 'Test',
-    'id' => 'modal',
-    'size' => 'modal-lg',
-]);
-echo "<div id='modalContent'></div>";
-Modal::end();
-?>
 
 
-<?php $form = ActiveForm::begin(['id' => 'search-form']); ?>
-<?= $form->field($model, 'search')->textInput(['autofocus' => true]) ?>
-    <div class="form-group">
-        <?php
-        echo Html::submitButton('Поиск', ['class' => 'btn btn-success search'])
-        //        echo Html::a('Поиск',
-        //            '/admin/default/index',
-        //            [
-        //                'data-confirm' =>  'Вы уверены что хотите удалить Группу - ' . $model->title . '?',
-        //                'class' => 'btn btn-success search',
-        //                'data-method' => 'post',
-        //                'data-pjax' => '1',
-        //            ]);
+    <div class="row">
+        <div class="col-lg-3">
+            <?php $form = ActiveForm::begin(['id' => 'search-form']); ?>
+            <?= $form->field($model, 'search')->textInput(['autofocus' => true]) ?>
+            <div class="form-group">
+                <?php
+                echo Html::submitButton('Поиск', ['class' => 'btn btn-success search'])
+                //        echo Html::a('Поиск',
+                //            '/admin/default/index',
+                //            [
+                //                'data-confirm' =>  'Вы уверены что хотите удалить Группу - ' . $model->title . '?',
+                //                'class' => 'btn btn-success search',
+                //                'data-method' => 'post',
+                //                'data-pjax' => '1',
+                //            ]);
 
-        ?>
-        <?php
-        //   echo Html::button('Поиск', [
-        //        'value' => \Yii::$app->request->get(),
-        //       'href' => \yii\helpers\Url::to(['index']),
-        //        'id' => 'btn-search',
-        //        'method' => 'POST',
-        //        'class' => 'btn btn-light',
-        //        'data-pjax' => '0'
-        //    ]);
-        ?>
+                ?>
+                <?php
+                //   echo Html::button('Поиск', [
+                //        'value' => \Yii::$app->request->get(),
+                //       'href' => \yii\helpers\Url::to(['index']),
+                //        'id' => 'btn-search',
+                //        'method' => 'POST',
+                //        'class' => 'btn btn-light',
+                //        'data-pjax' => '0'
+                //    ]);
+                ?>
+            </div>
+            <?php ActiveForm::end(); ?>
+        </div>
     </div>
-<?php ActiveForm::end(); ?>
 
 
 <?php
@@ -98,7 +93,7 @@ $script = <<< JS
                 .html(res)
             },
             error: function(){
-                alert('Пароль не найден!');
+                alert('Пароль не найден или нет доступа!');
             }
         });
         return false;

@@ -15,21 +15,22 @@ use yii\helpers\Url;
 </style>
 
 
-
 <div class="row">
     <?php if ($result != null): ?>
 
-            <div id="text1">
-                <?php if ($service): ?>
-                    <p class="text-center text-primary ">Сервис: <?= $service; ?></p>
-                <?php endif; ?>
-                <input class="form-control" id="inputText" type="text" value= <?= $result; ?>>
-                <?php //$view_password; ?>
+        <div id="text1">
+            <?php if ($service): ?>
+                <p class="text-center text-primary ">Сервис: <?= $service; ?></p>
+            <?php endif; ?>
 
-            </div>
+            <input class="form-control" id="inputText" type="text" value= <?= $result; ?>>
+            <?php //$view_password; ?>
 
-            <!--            <button click="navigator.clipboard.writeText('Текст')">Скопировать</button>-->
-            <!--            <input value=--><? //= $view_password; ?><!-- id="text" type="hidden">-->
+        </div>
+
+        <!--            <button click="navigator.clipboard.writeText('Текст')">Скопировать</button>-->
+        <!--            <input value=--><? //= $view_password; ?><!-- id="text" type="hidden">-->
+        <div class="text-center">
             <?= Html::button('copy', [
                 'id' => 'copyText',
                 'value' => $result,
@@ -39,7 +40,8 @@ use yii\helpers\Url;
 //                'data-bs-original-title' => 'Copy',
 //            'onclick' => "copytext('#text1')"
             ]); ?>
-            <!--    <input value="Copy" type="button" onclick="document.getElementById('text').select(); document.execCommand('copy');">-->
+        </div>
+        <!--    <input value="Copy" type="button" onclick="document.getElementById('text').select(); document.execCommand('copy');">-->
 
     <?php else: ?>
 
@@ -57,7 +59,7 @@ var text = document.getElementById("inputText");
 
 /* сохраняем кнопку в переменную btn */
 var btn = document.getElementById("copyText");
-console.log(text)
+
 /* вызываем функцию при нажатии на кнопку */
 btn.onclick = function() {
     console.log(text)

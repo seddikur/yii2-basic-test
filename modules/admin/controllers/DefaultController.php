@@ -8,6 +8,7 @@ use app\models\Passwords;
 use app\models\Users;
 use app\modules\admin\Admin;
 use app\modules\admin\services\PasswordEncryption;
+use yii\filters\VerbFilter;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -31,6 +32,20 @@ class DefaultController extends Controller
         parent::__construct($id, $module, $config);
         $this->passwordEncryption = $passwordEncryption;
     }
+    public function behaviors()
+    {
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
+                    ],
+                ],
+            ]
+        );
+    }
 
     /**
      * Renders the index view for the module
@@ -52,6 +67,7 @@ class DefaultController extends Controller
             $user_group = GroupUser::findOne(['user_id' => \Yii::$app->user->id]);
             if (!$password) {
                 \Yii::$app->session->setFlash('success', 'Не найдено паролей');
+                return $this->refresh();
             }
             $password_group = \app\models\GroupPassword::findOne(['password_id' => $password->id]);
             if (\Yii::$app->user->identity->isAdmin()) {
@@ -65,7 +81,8 @@ class DefaultController extends Controller
                     return $this->render('view', compact('result', 'service'));
 
                 } else {
-                    $result = null;
+                    \Yii::$app->session->setFlash('success', 'Нет доступа');
+                    return $this->refresh();
                 }
 
             }
@@ -155,4 +172,5 @@ class DefaultController extends Controller
 
         return $this->renderAjax('view-password', compact('view_password', 'service'));
     }
+
 }
